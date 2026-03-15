@@ -1,15 +1,15 @@
-# Copyright (C) 2025 WPClever
+# Copyright (C) 2026 WPClever
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPC AJAX Search for WooCommerce 2.5.0\n"
+"Project-Id-Version: WPC AJAX Search for WooCommerce 2.5.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpc-ajax-search\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-23T09:05:23+00:00\n"
+"POT-Creation-Date: 2026-03-15T09:14:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wpc-ajax-search\n"
@@ -39,719 +39,719 @@ msgstr ""
 msgid "https://wpclever.net"
 msgstr ""
 
-#: wpc-ajax-search.php:210
-#: wpc-ajax-search.php:295
+#: wpc-ajax-search.php:212
+#: wpc-ajax-search.php:310
 msgid "Settings"
 msgstr ""
 
-#: wpc-ajax-search.php:211
-#: wpc-ajax-search.php:308
+#: wpc-ajax-search.php:213
+#: wpc-ajax-search.php:323
 msgid "Premium Version"
 msgstr ""
 
-#: wpc-ajax-search.php:227
+#: wpc-ajax-search.php:229
 msgid "Community support"
 msgstr ""
 
-#: wpc-ajax-search.php:255
 #: wpc-ajax-search.php:270
+#: wpc-ajax-search.php:285
 msgid "WPC AJAX Search"
 msgstr ""
 
-#: wpc-ajax-search.php:255
+#: wpc-ajax-search.php:270
 msgid "AJAX Search"
 msgstr ""
 
-#: wpc-ajax-search.php:270
+#: wpc-ajax-search.php:285
 msgid "Premium"
 msgstr ""
 
 #. translators: stars
-#: wpc-ajax-search.php:273
+#: wpc-ajax-search.php:288
 #, php-format
 msgid "Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating."
 msgstr ""
 
-#: wpc-ajax-search.php:276
+#: wpc-ajax-search.php:291
 msgid "Reviews"
 msgstr ""
 
-#: wpc-ajax-search.php:278
+#: wpc-ajax-search.php:293
 msgid "Changelog"
 msgstr ""
 
-#: wpc-ajax-search.php:280
+#: wpc-ajax-search.php:295
 msgid "Discussion"
 msgstr ""
 
-#: wpc-ajax-search.php:288
+#: wpc-ajax-search.php:303
 msgid "Settings updated."
 msgstr ""
 
-#: wpc-ajax-search.php:299
+#: wpc-ajax-search.php:314
 msgid "Smart Search"
 msgstr ""
 
-#: wpc-ajax-search.php:303
+#: wpc-ajax-search.php:318
 msgid "Localization"
 msgstr ""
 
-#: wpc-ajax-search.php:312
+#: wpc-ajax-search.php:327
 msgid "Essential Kit"
 msgstr ""
 
-#: wpc-ajax-search.php:341
-#: wpc-ajax-search.php:702
+#: wpc-ajax-search.php:356
+#: wpc-ajax-search.php:726
 msgid "General"
 msgstr ""
 
-#: wpc-ajax-search.php:342
+#: wpc-ajax-search.php:357
 msgid "General settings."
 msgstr ""
 
-#: wpc-ajax-search.php:345
+#: wpc-ajax-search.php:360
 msgid "Auto-open"
 msgstr ""
 
-#: wpc-ajax-search.php:348
+#: wpc-ajax-search.php:363
 msgid "Yes, open popup"
 msgstr ""
 
-#: wpc-ajax-search.php:349
+#: wpc-ajax-search.php:364
 msgid "Yes, open inline"
 msgstr ""
 
-#: wpc-ajax-search.php:350
-#: wpc-ajax-search.php:392
-#: wpc-ajax-search.php:402
-#: wpc-ajax-search.php:424
+#: wpc-ajax-search.php:365
+#: wpc-ajax-search.php:407
+#: wpc-ajax-search.php:417
 #: wpc-ajax-search.php:439
-#: wpc-ajax-search.php:452
-#: wpc-ajax-search.php:464
-#: wpc-ajax-search.php:473
-#: wpc-ajax-search.php:483
-#: wpc-ajax-search.php:535
-#: wpc-ajax-search.php:614
-#: wpc-ajax-search.php:624
-#: wpc-ajax-search.php:634
-#: wpc-ajax-search.php:644
-#: wpc-ajax-search.php:660
+#: wpc-ajax-search.php:454
+#: wpc-ajax-search.php:467
+#: wpc-ajax-search.php:479
+#: wpc-ajax-search.php:488
+#: wpc-ajax-search.php:498
+#: wpc-ajax-search.php:550
+#: wpc-ajax-search.php:629
+#: wpc-ajax-search.php:639
+#: wpc-ajax-search.php:649
+#: wpc-ajax-search.php:659
+#: wpc-ajax-search.php:675
 msgid "No"
 msgstr ""
 
-#: wpc-ajax-search.php:352
+#: wpc-ajax-search.php:367
 msgid "Do the AJAX search when clicking on all search inputs."
 msgstr ""
 
-#: wpc-ajax-search.php:356
+#: wpc-ajax-search.php:371
 msgid "Manual show up button"
 msgstr ""
 
-#: wpc-ajax-search.php:361
+#: wpc-ajax-search.php:376
 msgid "button class or id"
 msgstr ""
 
 #. translators: selector
-#: wpc-ajax-search.php:362
+#: wpc-ajax-search.php:377
 #, php-format
 msgid "The class or id of the button, when clicking on this button the search popup will show up. Example %1$s or %2$s"
 msgstr ""
 
-#: wpc-ajax-search.php:366
+#: wpc-ajax-search.php:381
 msgid "Overlay layer"
 msgstr ""
 
-#: wpc-ajax-search.php:369
-#: wpc-ajax-search.php:411
+#: wpc-ajax-search.php:384
+#: wpc-ajax-search.php:426
 msgid "Show"
 msgstr ""
 
-#: wpc-ajax-search.php:370
-#: wpc-ajax-search.php:412
+#: wpc-ajax-search.php:385
+#: wpc-ajax-search.php:427
 msgid "Hide"
 msgstr ""
 
-#: wpc-ajax-search.php:372
+#: wpc-ajax-search.php:387
 msgid "If you hide the overlay layer, the buyer still can work on your site when the search popup is opening."
 msgstr ""
 
-#: wpc-ajax-search.php:376
+#: wpc-ajax-search.php:391
 msgid "Position"
 msgstr ""
 
-#: wpc-ajax-search.php:379
+#: wpc-ajax-search.php:394
 msgid "Right"
 msgstr ""
 
-#: wpc-ajax-search.php:380
+#: wpc-ajax-search.php:395
 msgid "Left"
 msgstr ""
 
-#: wpc-ajax-search.php:381
+#: wpc-ajax-search.php:396
 msgid "Top"
 msgstr ""
 
-#: wpc-ajax-search.php:382
+#: wpc-ajax-search.php:397
 msgid "Bottom"
 msgstr ""
 
-#: wpc-ajax-search.php:383
+#: wpc-ajax-search.php:398
 msgid "Center"
 msgstr ""
 
-#: wpc-ajax-search.php:388
+#: wpc-ajax-search.php:403
 msgid "Effect"
 msgstr ""
 
-#: wpc-ajax-search.php:391
-#: wpc-ajax-search.php:401
-#: wpc-ajax-search.php:438
-#: wpc-ajax-search.php:451
-#: wpc-ajax-search.php:463
-#: wpc-ajax-search.php:472
-#: wpc-ajax-search.php:482
-#: wpc-ajax-search.php:534
-#: wpc-ajax-search.php:613
-#: wpc-ajax-search.php:623
-#: wpc-ajax-search.php:633
-#: wpc-ajax-search.php:643
+#: wpc-ajax-search.php:406
+#: wpc-ajax-search.php:416
+#: wpc-ajax-search.php:453
+#: wpc-ajax-search.php:466
+#: wpc-ajax-search.php:478
+#: wpc-ajax-search.php:487
+#: wpc-ajax-search.php:497
+#: wpc-ajax-search.php:549
+#: wpc-ajax-search.php:628
+#: wpc-ajax-search.php:638
+#: wpc-ajax-search.php:648
+#: wpc-ajax-search.php:658
 msgid "Yes"
 msgstr ""
 
-#: wpc-ajax-search.php:394
+#: wpc-ajax-search.php:409
 msgid "Enable/disable slide effect."
 msgstr ""
 
-#: wpc-ajax-search.php:398
+#: wpc-ajax-search.php:413
 msgid "Use perfect-scrollbar"
 msgstr ""
 
 #. translators: link
-#: wpc-ajax-search.php:404
+#: wpc-ajax-search.php:419
 #, php-format
 msgid "Read more about %s"
 msgstr ""
 
-#: wpc-ajax-search.php:408
+#: wpc-ajax-search.php:423
 msgid "Close button"
 msgstr ""
 
-#: wpc-ajax-search.php:414
+#: wpc-ajax-search.php:429
 msgid "Show/hide the close button."
 msgstr ""
 
-#: wpc-ajax-search.php:418
+#: wpc-ajax-search.php:433
 msgid "Link to individual product"
 msgstr ""
 
-#: wpc-ajax-search.php:421
+#: wpc-ajax-search.php:436
 msgid "Yes, open in the same tab"
 msgstr ""
 
-#: wpc-ajax-search.php:422
+#: wpc-ajax-search.php:437
 msgid "Yes, open in the new tab"
 msgstr ""
 
-#: wpc-ajax-search.php:423
+#: wpc-ajax-search.php:438
 msgid "Yes, open quick view popup"
 msgstr ""
 
-#: wpc-ajax-search.php:435
+#: wpc-ajax-search.php:450
 msgid "Compare button"
 msgstr ""
 
-#: wpc-ajax-search.php:448
+#: wpc-ajax-search.php:463
 msgid "Wishlist button"
 msgstr ""
 
-#: wpc-ajax-search.php:460
+#: wpc-ajax-search.php:475
 msgid "Add to cart button"
 msgstr ""
 
-#: wpc-ajax-search.php:469
+#: wpc-ajax-search.php:484
 msgid "Exclude hidden"
 msgstr ""
 
-#: wpc-ajax-search.php:475
+#: wpc-ajax-search.php:490
 msgid "Exclude hidden products from the search result."
 msgstr ""
 
-#: wpc-ajax-search.php:479
+#: wpc-ajax-search.php:494
 msgid "Exclude unpurchasable"
 msgstr ""
 
-#: wpc-ajax-search.php:485
+#: wpc-ajax-search.php:500
 msgid "Exclude unpurchasable products from the search result."
 msgstr ""
 
-#: wpc-ajax-search.php:489
+#: wpc-ajax-search.php:504
 msgid "Smart keywords"
 msgstr ""
 
-#: wpc-ajax-search.php:493
+#: wpc-ajax-search.php:508
 msgid "Configure smart keywords with many conditions."
 msgstr ""
 
-#: wpc-ajax-search.php:497
+#: wpc-ajax-search.php:512
 msgid "Special keywords"
 msgstr ""
 
-#: wpc-ajax-search.php:502
+#: wpc-ajax-search.php:517
 msgid "Keyword for on-sale products."
 msgstr ""
 
-#: wpc-ajax-search.php:507
+#: wpc-ajax-search.php:522
 msgid "Keyword for recent products."
 msgstr ""
 
-#: wpc-ajax-search.php:512
+#: wpc-ajax-search.php:527
 msgid "Keyword for featured products."
 msgstr ""
 
-#: wpc-ajax-search.php:517
+#: wpc-ajax-search.php:532
 msgid "Keyword for popular products."
 msgstr ""
 
-#: wpc-ajax-search.php:522
+#: wpc-ajax-search.php:537
 msgid "Popular keywords"
 msgstr ""
 
-#: wpc-ajax-search.php:526
+#: wpc-ajax-search.php:541
 msgid "Add popular keywords, split by a comma. It will be shown on the search popup. You also can use above special keywords."
 msgstr ""
 
-#: wpc-ajax-search.php:530
+#: wpc-ajax-search.php:545
 msgid "Animated placeholder"
 msgstr ""
 
-#: wpc-ajax-search.php:537
+#: wpc-ajax-search.php:552
 msgid "Enable animated placeholder texts."
 msgstr ""
 
-#: wpc-ajax-search.php:541
+#: wpc-ajax-search.php:556
 msgid "Animated placeholder texts"
 msgstr ""
 
-#: wpc-ajax-search.php:545
+#: wpc-ajax-search.php:560
 msgid "Add animated placeholder texts, each text in one line."
 msgstr ""
 
-#: wpc-ajax-search.php:549
+#: wpc-ajax-search.php:564
 msgid "Clicking on placeholder texts"
 msgstr ""
 
-#: wpc-ajax-search.php:552
+#: wpc-ajax-search.php:567
 msgid "Start with empty search box"
 msgstr ""
 
-#: wpc-ajax-search.php:553
+#: wpc-ajax-search.php:568
 msgid "Keep the placeholder texts"
 msgstr ""
 
-#: wpc-ajax-search.php:558
+#: wpc-ajax-search.php:573
 msgid "Menu(s)"
 msgstr ""
 
-#: wpc-ajax-search.php:572
+#: wpc-ajax-search.php:587
 msgid "Choose the menu(s) you want to add the \"search menu\" at the end."
 msgstr ""
 
-#: wpc-ajax-search.php:577
-#: wpc-ajax-search.php:712
-#: wpc-ajax-search.php:721
-#: wpc-ajax-search.php:1231
-#: wpc-ajax-search.php:1246
-#: wpc-ajax-search.php:1349
+#: wpc-ajax-search.php:592
+#: wpc-ajax-search.php:736
+#: wpc-ajax-search.php:745
+#: wpc-ajax-search.php:1265
+#: wpc-ajax-search.php:1280
+#: wpc-ajax-search.php:1383
 msgid "Search"
 msgstr ""
 
-#: wpc-ajax-search.php:581
+#: wpc-ajax-search.php:596
 msgid "Post types"
 msgstr ""
 
-#: wpc-ajax-search.php:598
+#: wpc-ajax-search.php:613
 msgid "Choose the post type(s) for searching."
 msgstr ""
 
-#: wpc-ajax-search.php:602
+#: wpc-ajax-search.php:617
 msgid "Search limit"
 msgstr ""
 
-#: wpc-ajax-search.php:610
+#: wpc-ajax-search.php:625
 msgid "Search by category"
 msgstr ""
 
-#: wpc-ajax-search.php:616
-#: wpc-ajax-search.php:626
-#: wpc-ajax-search.php:636
+#: wpc-ajax-search.php:631
+#: wpc-ajax-search.php:641
+#: wpc-ajax-search.php:651
 msgid "For products only."
 msgstr ""
 
-#: wpc-ajax-search.php:620
+#: wpc-ajax-search.php:635
 msgid "Search by SKU"
 msgstr ""
 
-#: wpc-ajax-search.php:630
+#: wpc-ajax-search.php:645
 msgid "Search by tag"
 msgstr ""
 
-#: wpc-ajax-search.php:640
-#: wpc-ajax-search.php:763
+#: wpc-ajax-search.php:655
+#: wpc-ajax-search.php:787
 msgid "More results"
 msgstr ""
 
-#: wpc-ajax-search.php:646
+#: wpc-ajax-search.php:661
 msgid "Show \"more results\" and link it to the search page when having more results than the limitation. For products only."
 msgstr ""
 
-#: wpc-ajax-search.php:651
+#: wpc-ajax-search.php:666
 msgid "Cache"
 msgstr ""
 
-#: wpc-ajax-search.php:655
+#: wpc-ajax-search.php:670
 msgid "Cache method"
 msgstr ""
 
-#: wpc-ajax-search.php:658
+#: wpc-ajax-search.php:673
 msgid "File"
 msgstr ""
 
-#: wpc-ajax-search.php:659
+#: wpc-ajax-search.php:674
 msgid "Database"
 msgstr ""
 
-#: wpc-ajax-search.php:665
+#: wpc-ajax-search.php:680
 msgid "Cache time (hrs)"
 msgstr ""
 
-#: wpc-ajax-search.php:680
+#: wpc-ajax-search.php:695
 msgid "Cleared!"
 msgstr ""
 
-#: wpc-ajax-search.php:683
+#: wpc-ajax-search.php:698
 msgid "Clear cache"
 msgstr ""
 
-#: wpc-ajax-search.php:693
-#: wpc-ajax-search.php:778
-#: wpc-ajax-search.php:851
+#: wpc-ajax-search.php:717
+#: wpc-ajax-search.php:802
+#: wpc-ajax-search.php:885
 msgid "import / export"
 msgstr ""
 
-#: wpc-ajax-search.php:704
+#: wpc-ajax-search.php:728
 msgid "Leave blank to use the default text and its equivalent translation in multiple languages."
 msgstr ""
 
-#: wpc-ajax-search.php:708
+#: wpc-ajax-search.php:732
 msgid "Menu label"
 msgstr ""
 
-#: wpc-ajax-search.php:716
+#: wpc-ajax-search.php:740
 msgid "Heading"
 msgstr ""
 
-#: wpc-ajax-search.php:725
+#: wpc-ajax-search.php:749
 msgid "Placeholder"
 msgstr ""
 
-#: wpc-ajax-search.php:730
-#: wpc-ajax-search.php:1266
+#: wpc-ajax-search.php:754
+#: wpc-ajax-search.php:1300
 msgid "Search products…"
 msgstr ""
 
-#: wpc-ajax-search.php:734
-#: wpc-ajax-search.php:739
-#: wpc-ajax-search.php:1287
+#: wpc-ajax-search.php:758
+#: wpc-ajax-search.php:763
+#: wpc-ajax-search.php:1321
 msgid "Popular keywords:"
 msgstr ""
 
-#: wpc-ajax-search.php:743
+#: wpc-ajax-search.php:767
 msgid "No results"
 msgstr ""
 
 #. translators: keyword
-#: wpc-ajax-search.php:749
-#: wpc-ajax-search.php:1019
+#: wpc-ajax-search.php:773
+#: wpc-ajax-search.php:1053
 #, php-format
 msgid "No results found for \"%s\"."
 msgstr ""
 
-#: wpc-ajax-search.php:753
+#: wpc-ajax-search.php:777
 msgid "No results in category"
 msgstr ""
 
 #. translators: keyword and category
-#: wpc-ajax-search.php:759
-#: wpc-ajax-search.php:1017
+#: wpc-ajax-search.php:783
+#: wpc-ajax-search.php:1051
 #, php-format
 msgid "No results found for \"%1$s\" in \"%2$s\"."
 msgstr ""
 
 #. translators: count
-#: wpc-ajax-search.php:769
-#: wpc-ajax-search.php:1161
+#: wpc-ajax-search.php:793
+#: wpc-ajax-search.php:1195
 #, php-format
 msgid "More results (%d)"
 msgstr ""
 
-#: wpc-ajax-search.php:794
+#: wpc-ajax-search.php:818
 msgid "This plugin will check the conditions from the top down the list to find if the input keyword matches any condition. When one condition is satisfied, the smart search’ checking process will stop and show the defined products as search results. The checking process won’t stop until a satisfied condition is found in the list. If no conditions are met by the input keyword(s), normal search results will be shown instead."
 msgstr ""
 
-#: wpc-ajax-search.php:798
+#: wpc-ajax-search.php:822
 msgid "Build-in Shortcodes"
 msgstr ""
 
-#: wpc-ajax-search.php:835
+#: wpc-ajax-search.php:859
 msgid "+ Add rule"
 msgstr ""
 
-#: wpc-ajax-search.php:837
+#: wpc-ajax-search.php:861
 msgid "Expand All"
 msgstr ""
 
-#: wpc-ajax-search.php:839
+#: wpc-ajax-search.php:863
 msgid "Collapse All"
 msgstr ""
 
-#: wpc-ajax-search.php:1274
+#: wpc-ajax-search.php:1308
 msgid "All categories"
 msgstr ""
 
-#: wpc-ajax-search.php:1388
+#: wpc-ajax-search.php:1422
 msgid "remove"
 msgstr ""
 
-#: wpc-ajax-search.php:1393
-#: wpc-ajax-search.php:1560
+#: wpc-ajax-search.php:1427
+#: wpc-ajax-search.php:1594
 msgid "Name"
 msgstr ""
 
-#: wpc-ajax-search.php:1399
+#: wpc-ajax-search.php:1433
 msgid "For management only."
 msgstr ""
 
-#: wpc-ajax-search.php:1413
+#: wpc-ajax-search.php:1447
 msgid "Keyword conditions"
 msgstr ""
 
-#: wpc-ajax-search.php:1414
+#: wpc-ajax-search.php:1448
 msgid "Describe the applicable keywords."
 msgstr ""
 
-#: wpc-ajax-search.php:1432
-#: wpc-ajax-search.php:1612
+#: wpc-ajax-search.php:1466
+#: wpc-ajax-search.php:1646
 msgid "+ Add condition"
 msgstr ""
 
-#: wpc-ajax-search.php:1455
+#: wpc-ajax-search.php:1489
 msgid "Input characters are more than"
 msgstr ""
 
-#: wpc-ajax-search.php:1456
+#: wpc-ajax-search.php:1490
 msgid "Input characters are fewer than"
 msgstr ""
 
-#: wpc-ajax-search.php:1457
+#: wpc-ajax-search.php:1491
 msgid "Input words are more than"
 msgstr ""
 
-#: wpc-ajax-search.php:1458
+#: wpc-ajax-search.php:1492
 msgid "Input words are fewer than"
 msgstr ""
 
-#: wpc-ajax-search.php:1459
+#: wpc-ajax-search.php:1493
 msgid "Include either keyword"
 msgstr ""
 
-#: wpc-ajax-search.php:1460
+#: wpc-ajax-search.php:1494
 msgid "Include all keyword(s)"
 msgstr ""
 
-#: wpc-ajax-search.php:1461
+#: wpc-ajax-search.php:1495
 msgid "Exclude keyword(s)"
 msgstr ""
 
-#: wpc-ajax-search.php:1462
+#: wpc-ajax-search.php:1496
 msgid "Match regular expression (RegEx)"
 msgstr ""
 
-#: wpc-ajax-search.php:1500
+#: wpc-ajax-search.php:1534
 msgid "Returned results"
 msgstr ""
 
-#: wpc-ajax-search.php:1501
+#: wpc-ajax-search.php:1535
 msgid "Define products or message shown in the search results for above keyword(s)."
 msgstr ""
 
-#: wpc-ajax-search.php:1504
+#: wpc-ajax-search.php:1538
 msgid "Output types"
 msgstr ""
 
-#: wpc-ajax-search.php:1508
-#: wpc-ajax-search.php:1578
+#: wpc-ajax-search.php:1542
+#: wpc-ajax-search.php:1612
 msgid "Products"
 msgstr ""
 
-#: wpc-ajax-search.php:1509
+#: wpc-ajax-search.php:1543
 msgid "Custom message"
 msgstr ""
 
-#: wpc-ajax-search.php:1515
+#: wpc-ajax-search.php:1549
 msgid "Message"
 msgstr ""
 
-#: wpc-ajax-search.php:1528
+#: wpc-ajax-search.php:1562
 msgid "You can use shortcode(s) in this custom message."
 msgstr ""
 
-#: wpc-ajax-search.php:1535
+#: wpc-ajax-search.php:1569
 msgid "Source"
 msgstr ""
 
-#: wpc-ajax-search.php:1539
+#: wpc-ajax-search.php:1573
 msgid "All products"
 msgstr ""
 
-#: wpc-ajax-search.php:1540
+#: wpc-ajax-search.php:1574
 msgid "Selected products"
 msgstr ""
 
-#: wpc-ajax-search.php:1541
-#: wpc-ajax-search.php:1598
+#: wpc-ajax-search.php:1575
+#: wpc-ajax-search.php:1632
 msgid "Combined"
 msgstr ""
 
-#: wpc-ajax-search.php:1550
+#: wpc-ajax-search.php:1584
 msgid "Limit"
 msgstr ""
 
-#: wpc-ajax-search.php:1555
+#: wpc-ajax-search.php:1589
 msgid "Order by"
 msgstr ""
 
-#: wpc-ajax-search.php:1557
-#: wpc-ajax-search.php:1570
+#: wpc-ajax-search.php:1591
+#: wpc-ajax-search.php:1604
 msgid "Default"
 msgstr ""
 
-#: wpc-ajax-search.php:1558
+#: wpc-ajax-search.php:1592
 msgid "None"
 msgstr ""
 
-#: wpc-ajax-search.php:1559
+#: wpc-ajax-search.php:1593
 msgid "ID"
 msgstr ""
 
-#: wpc-ajax-search.php:1561
+#: wpc-ajax-search.php:1595
 msgid "Type"
 msgstr ""
 
-#: wpc-ajax-search.php:1562
+#: wpc-ajax-search.php:1596
 msgid "Rand"
 msgstr ""
 
-#: wpc-ajax-search.php:1563
+#: wpc-ajax-search.php:1597
 msgid "Date"
 msgstr ""
 
-#: wpc-ajax-search.php:1564
-#: wpc-ajax-search.php:1656
+#: wpc-ajax-search.php:1598
+#: wpc-ajax-search.php:1690
 msgid "Price"
 msgstr ""
 
-#: wpc-ajax-search.php:1565
+#: wpc-ajax-search.php:1599
 msgid "Modified"
 msgstr ""
 
-#: wpc-ajax-search.php:1568
+#: wpc-ajax-search.php:1602
 msgid "Order"
 msgstr ""
 
-#: wpc-ajax-search.php:1571
+#: wpc-ajax-search.php:1605
 msgid "DESC"
 msgstr ""
 
-#: wpc-ajax-search.php:1572
+#: wpc-ajax-search.php:1606
 msgid "ASC"
 msgstr ""
 
-#: wpc-ajax-search.php:1583
+#: wpc-ajax-search.php:1617
 msgid "Search for a product&hellip;"
 msgstr ""
 
-#: wpc-ajax-search.php:1601
+#: wpc-ajax-search.php:1635
 msgid "* Configure to find products that match all listed conditions."
 msgstr ""
 
-#: wpc-ajax-search.php:1617
+#: wpc-ajax-search.php:1651
 msgid "Terms"
 msgstr ""
 
-#: wpc-ajax-search.php:1666
+#: wpc-ajax-search.php:1700
 msgid "including"
 msgstr ""
 
-#: wpc-ajax-search.php:1667
+#: wpc-ajax-search.php:1701
 msgid "excluding"
 msgstr ""
 
-#: wpc-ajax-search.php:1684
+#: wpc-ajax-search.php:1718
 msgid "equal"
 msgstr ""
 
-#: wpc-ajax-search.php:1685
+#: wpc-ajax-search.php:1719
 msgid "not equal"
 msgstr ""
 
-#: wpc-ajax-search.php:1686
+#: wpc-ajax-search.php:1720
 msgid "greater"
 msgstr ""
 
-#: wpc-ajax-search.php:1687
+#: wpc-ajax-search.php:1721
 msgid "less than"
 msgstr ""
 
-#: wpc-ajax-search.php:1688
+#: wpc-ajax-search.php:1722
 msgid "greater or equal"
 msgstr ""
 
-#: wpc-ajax-search.php:1689
+#: wpc-ajax-search.php:1723
 msgid "less or equal"
 msgstr ""
 
-#: wpc-ajax-search.php:1825
+#: wpc-ajax-search.php:1859
 msgid "Placeholder result"
 msgstr ""
 
-#: wpc-ajax-search.php:1826
+#: wpc-ajax-search.php:1860
 msgid "Before returned message"
 msgstr ""
 
-#: wpc-ajax-search.php:1827
+#: wpc-ajax-search.php:1861
 msgid "After returned message"
 msgstr ""
 
-#: wpc-ajax-search.php:1828
+#: wpc-ajax-search.php:1862
 msgid "Before returned products"
 msgstr ""
 
-#: wpc-ajax-search.php:1829
+#: wpc-ajax-search.php:1863
 msgid "After returned products"
 msgstr ""
 
-#: wpc-ajax-search.php:1830
+#: wpc-ajax-search.php:1864
 msgid "Before not-found message"
 msgstr ""
 
-#: wpc-ajax-search.php:1831
+#: wpc-ajax-search.php:1865
 msgid "After not-found message"
 msgstr ""
 
-#: wpc-ajax-search.php:1832
+#: wpc-ajax-search.php:1866
 msgid "Before search result"
 msgstr ""
 
-#: wpc-ajax-search.php:1833
+#: wpc-ajax-search.php:1867
 msgid "After search result"
 msgstr ""

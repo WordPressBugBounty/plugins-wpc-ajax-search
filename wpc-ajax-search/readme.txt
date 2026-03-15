@@ -3,8 +3,8 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, ajax, search
 Tested up to: 6.9
-Version: 2.5.0
-Stable tag: 2.5.0
+Version: 2.5.1
+Stable tag: 2.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,10 @@ Please try other plugins from us:
 4. Go to WP-admin > WPClever > AJAX Search to configure
 
 == Changelog ==
+
+= 2.5.1 =
+* Fixed: Minor CSS/JS issues in the backend
+* Updated: Compatible with WP 6.9 & Woo 10.6
 
 = 2.5.0 =
 * Updated: Optimized the code
