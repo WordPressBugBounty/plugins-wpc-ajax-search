@@ -3,23 +3,23 @@
 Plugin Name: WPC AJAX Search for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: An interaction search popup for WooCommerce.
-Version: 2.5.2
+Version: 2.5.3
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: wpc-ajax-search
 Domain Path: /languages/
 Requires Plugins: woocommerce
-Requires at least: 4.0
-Tested up to: 6.9
+Requires at least: 5.9
+Tested up to: 7.0
 WC requires at least: 3.0
-WC tested up to: 10.7
+WC tested up to: 10.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.5.2' );
+! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.5.3' );
 ! defined( 'WPCAS_LITE' ) && define( 'WPCAS_LITE', __FILE__ );
 ! defined( 'WPCAS_FILE' ) && define( 'WPCAS_FILE', __FILE__ );
 ! defined( 'WPCAS_URI' ) && define( 'WPCAS_URI', plugin_dir_url( __FILE__ ) );
@@ -122,8 +122,6 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                 }
 
                 function init() {
-                    // load text-domain
-                    load_plugin_textdomain( 'wpc-ajax-search', false, basename( WPCAS_DIR ) . '/languages/' );
 
                     add_shortcode( 'wpcas_search_form', [ $this, 'shortcode_search_form' ] );
                     add_shortcode( 'wpcas_categories', [ $this, 'shortcode_categories' ] );
@@ -138,12 +136,12 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                     }
 
                     // feather icons
-                    wp_enqueue_style( 'wpcas-feather', WPCAS_URI . 'assets/feather/feather.css' );
+                    wp_enqueue_style( 'wpcas-feather', WPCAS_URI . 'assets/feather/feather.css', [], WPCAS_VERSION );
 
                     // perfect scrollbar
                     if ( self::get_setting( 'perfect_scrollbar', 'yes' ) === 'yes' ) {
-                        wp_enqueue_style( 'perfect-scrollbar', WPCAS_URI . 'assets/libs/perfect-scrollbar/css/perfect-scrollbar.min.css' );
-                        wp_enqueue_style( 'perfect-scrollbar-wpc', WPCAS_URI . 'assets/libs/perfect-scrollbar/css/custom-theme.css' );
+                        wp_enqueue_style( 'perfect-scrollbar', WPCAS_URI . 'assets/libs/perfect-scrollbar/css/perfect-scrollbar.min.css', [], WPCAS_VERSION );
+                        wp_enqueue_style( 'perfect-scrollbar-wpc', WPCAS_URI . 'assets/libs/perfect-scrollbar/css/custom-theme.css', [], WPCAS_VERSION );
                         wp_enqueue_script( 'perfect-scrollbar', WPCAS_URI . 'assets/libs/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js', [ 'jquery' ], WPCAS_VERSION, true );
                     }
 
@@ -196,7 +194,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                 'jquery-ui-dialog',
                                 'wc-enhanced-select',
                                 'selectWoo',
-                        ] );
+                        ], WPCAS_VERSION, true );
                         wp_localize_script( 'wpcas-backend', 'wpcas_vars', [
                                 'wpcas_nonce' => wp_create_nonce( 'wpcas_nonce' )
                         ] );
@@ -277,7 +275,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                 function admin_menu_content() {
                     add_thickbox();
-                    $active_tab = sanitize_key( $_GET['tab'] ?? 'settings' );
+                    $active_tab = sanitize_key( wp_unslash( $_GET['tab'] ?? 'settings' ) );
                     ?>
                     <div class="wpclever_settings_page wrap">
                         <div class="wpclever_settings_page_header">
@@ -300,7 +298,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                             </div>
                         </div>
                         <h2></h2>
-                        <?php if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] ) { ?>
+                        <?php if ( isset( $_GET['settings-updated'] ) && sanitize_key( wp_unslash( $_GET['settings-updated'] ) ) ) { ?>
                             <div class="notice notice-success is-dismissible">
                                 <p><?php esc_html_e( 'Settings updated.', 'wpc-ajax-search' ); ?></p>
                             </div>
@@ -539,7 +537,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                             <th scope="row"><?php esc_html_e( 'Popular keywords', 'wpc-ajax-search' ); ?></th>
                                             <td>
                                                 <textarea name="wpcas_settings[popular_keywords]" rows="5" cols="50"
-                                                          class="large-text"><?php echo self::get_setting( 'popular_keywords' ); ?></textarea>
+                                                          class="large-text"><?php echo esc_textarea( self::get_setting( 'popular_keywords' ) ); ?></textarea>
                                                 <span class="description"><?php esc_html_e( 'Add popular keywords, split by a comma. It will be shown on the search popup. You also can use above special keywords.', 'wpc-ajax-search' ); ?></span>
                                             </td>
                                         </tr>
@@ -558,7 +556,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                             <th scope="row"><?php esc_html_e( 'Animated placeholder texts', 'wpc-ajax-search' ); ?></th>
                                             <td>
                                                 <textarea name="wpcas_settings[placeholder_text]" rows="10" cols="50"
-                                                          class="large-text"><?php echo self::get_setting( 'placeholder_text' ); ?></textarea>
+                                                          class="large-text"><?php echo esc_textarea( self::get_setting( 'placeholder_text' ) ); ?></textarea>
                                                 <span class="description"><?php esc_html_e( 'Add animated placeholder texts, each text in one line.', 'wpc-ajax-search' ); ?></span>
                                             </td>
                                         </tr>
@@ -583,7 +581,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                                 $saved_menus = (array) self::get_setting( 'menus', [] );
 
                                                 foreach ( $nav_menus as $nav_id => $nav_name ) {
-                                                    echo '<input type="checkbox" name="wpcas_settings[menus][]" value="' . $nav_id . '" ' . ( in_array( $nav_id, $saved_menus ) ? 'checked' : '' ) . '/><label>' . $nav_name . '</label><br/>';
+                                                    echo '<input type="checkbox" name="wpcas_settings[menus][]" value="' . esc_attr( $nav_id ) . '" ' . ( in_array( $nav_id, $saved_menus ) ? 'checked' : '' ) . '/><label>' . esc_html( $nav_name ) . '</label><br/>';
                                                 }
                                                 ?>
                                                 <span class="description"><?php esc_html_e( 'Choose the menu(s) you want to add the "search menu" at the end.', 'wpc-ajax-search' ); ?></span>
@@ -684,7 +682,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                                 <input name="wpcas_settings[cache_time]" type="number" min="0"
                                                        max="8760"
                                                        value="<?php echo esc_attr( self::get_setting( 'cache_time', 24 ) ); ?>"/>
-                                                <?php if ( isset( $_GET['act'] ) && ( $_GET['act'] === 'clear_cache' ) ) {
+                                                <?php if ( isset( $_GET['act'] ) && ( sanitize_key( wp_unslash( $_GET['act'] ) ) === 'clear_cache' ) ) {
                                                     global $wpdb;
 
                                                     // clear database cache
@@ -947,8 +945,9 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                         }
                     }
 
-                    $keyword      = sanitize_text_field( wp_unslash( apply_filters( 'wpcas_keyword', $_POST['keyword'] ) ) );
-                    $category     = absint( sanitize_text_field( wp_unslash( $_POST['category'] ) ) );
+                    $raw_keyword  = sanitize_text_field( wp_unslash( $_POST['keyword'] ?? '' ) );
+                    $keyword      = sanitize_text_field( apply_filters( 'wpcas_keyword', $raw_keyword ) );
+                    $category     = absint( sanitize_text_field( wp_unslash( $_POST['category'] ?? '0' ) ) );
                     $on_sale      = self::get_setting( 'keyword_on_sale', '' );
                     $recent       = self::get_setting( 'keyword_recent', '' );
                     $featured     = self::get_setting( 'keyword_featured', '' );
@@ -978,19 +977,19 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                             if ( ( time() - $file_time < $cache_life ) ) {
                                 $return = file_get_contents( $cache_file );
-                                echo apply_filters( 'wpcas_search_result', $return, $keyword, $category );
+                                echo wp_kses_post( apply_filters( 'wpcas_search_result', $return, $keyword, $category ) );
 
                                 wp_die();
                             } else {
                                 // delete this file & write later
-                                unlink( $cache_file );
+                                wp_delete_file( $cache_file );
                             }
                         }
                     }
 
                     if ( ( $cache_method === 'database' ) && ( $return = get_transient( $log_key ) ) ) {
                         // database cache
-                        echo apply_filters( 'wpcas_search_result', $return, $keyword, $category );
+                        echo wp_kses_post( apply_filters( 'wpcas_search_result', $return, $keyword, $category ) );
 
                         wp_die();
                     }
@@ -1050,25 +1049,24 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                         do_action( 'wpcas_before_not_found', $keyword, $category );
 
                         if ( ! empty( $category ) && ( $cat = get_term_by( 'id', absint( $category ), 'product_cat' ) ) ) {
-                            echo '<div class="wpcas-not-found"><span>' . sprintf( self::localization( 'no_results_category', /* translators: keyword and category */ esc_html__( 'No results found for "%1$s" in "%2$s".', 'wpc-ajax-search' ) ), $keyword, esc_html( $cat->name ) ) . '</span></div>';
+                            echo wp_kses_post( '<div class="wpcas-not-found"><span>' . sprintf( self::localization( 'no_results_category', /* translators: keyword and category */ esc_html__( 'No results found for "%1$s" in "%2$s".', 'wpc-ajax-search' ) ), esc_html( $keyword ), esc_html( $cat->name ) ) . '</span></div>' );
                         } else {
-                            echo '<div class="wpcas-not-found"><span>' . sprintf( self::localization( 'no_results', /* translators: keyword */ esc_html__( 'No results found for "%s".', 'wpc-ajax-search' ) ), $keyword ) . '</span></div>';
+                            echo wp_kses_post( '<div class="wpcas-not-found"><span>' . sprintf( self::localization( 'no_results', /* translators: keyword */ esc_html__( 'No results found for "%s".', 'wpc-ajax-search' ) ), esc_html( $keyword ) ) . '</span></div>' );
                         }
 
                         do_action( 'wpcas_after_not_found', $keyword, $category );
                     }
-
-                    end:
 
                     do_action( 'wpcas_after_search_result', $keyword, $category );
 
                     $return = ob_get_clean();
 
                     if ( ( $cache_method === 'file' ) && ! file_exists( $cache_file ) ) {
-                        // file cache
-                        $open  = @fopen( $cache_file, "a" );
-                        $write = @fputs( $open, $return );
-                        @fclose( $open );
+                        // file cache - use WP_Filesystem
+                        global $wp_filesystem;
+                        require_once ABSPATH . 'wp-admin/includes/file.php';
+                        WP_Filesystem();
+                        $wp_filesystem->put_contents( $cache_file, $return, FS_CHMOD_FILE );
                     }
 
                     if ( ( $cache_method === 'database' ) && ! get_transient( $log_key ) ) {
@@ -1078,7 +1076,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                     do_action( 'wpcas_after_search', $keyword, $category );
 
-                    echo apply_filters( 'wpcas_search_result', $return, $keyword, $category );
+                    echo wp_kses_post( apply_filters( 'wpcas_search_result', $return, $keyword, $category ) );
 
                     wp_die();
                 }
@@ -1113,9 +1111,9 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                             do_action( 'wpcas_before_product_thumbnail', $product );
 
                             if ( $link !== 'no' ) {
-                                echo sprintf( '<a ' . ( $link === 'yes_popup' ? 'class="woosq-btn" data-id="' . $pid . '"' : '' ) . ' href="%s" ' . ( $link === 'yes_blank' ? 'target="_blank"' : '' ) . '>%s</a>', $product->get_permalink(), $product->get_image() );
+                                echo sprintf( '<a ' . ( $link === 'yes_popup' ? 'class="woosq-btn" data-id="' . esc_attr( $pid ) . '"' : '' ) . ' href="%s" ' . ( $link === 'yes_blank' ? 'target="_blank"' : '' ) . '>%s</a>', esc_url( $product->get_permalink() ), wp_kses_post( $product->get_image() ) );
                             } else {
-                                echo $product->get_image();
+                                echo wp_kses_post( $product->get_image() );
                             }
 
                             do_action( 'wpcas_after_product_thumbnail', $product );
@@ -1128,15 +1126,15 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                             do_action( 'wpcas_before_product_name', $product );
 
                             if ( $link !== 'no' ) {
-                                echo sprintf( '<a ' . ( $link === 'yes_popup' ? 'class="woosq-btn" data-id="' . $pid . '"' : '' ) . ' href="%s" ' . ( $link === 'yes_blank' ? 'target="_blank"' : '' ) . '>%s</a>', $product->get_permalink(), $product->get_name() );
+                                echo sprintf( '<a ' . ( $link === 'yes_popup' ? 'class="woosq-btn" data-id="' . esc_attr( $pid ) . '"' : '' ) . ' href="%s" ' . ( $link === 'yes_blank' ? 'target="_blank"' : '' ) . '>%s</a>', esc_url( $product->get_permalink() ), esc_html( $product->get_name() ) );
                             } else {
-                                echo $product->get_name();
+                                echo esc_html( $product->get_name() );
                             }
 
                             do_action( 'wpcas_after_product_name', $product );
                             echo '</div><!-- /wpcas-product-name -->';
 
-                            echo '<div class="wpcas-product-price">' . $product->get_price_html() . '</div>';
+                            echo '<div class="wpcas-product-price">' . wp_kses_post( $product->get_price_html() ) . '</div>';
 
                             do_action( 'wpcas_after_product_info', $product );
                             echo '</div><!-- /wpcas-product-info -->';
@@ -1159,7 +1157,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                             if ( get_post_thumbnail_id( $pid ) ) {
                                 if ( $link !== 'no' ) {
-                                    echo sprintf( '<a href="%s" ' . ( $link === 'yes_blank' ? 'target="_blank"' : '' ) . '>%s</a>', get_permalink( $pid ), get_the_post_thumbnail( $pid ) );
+                                    echo sprintf( '<a href="%s" ' . ( $link === 'yes_blank' ? 'target="_blank"' : '' ) . '>%s</a>', esc_url( get_permalink( $pid ) ), get_the_post_thumbnail( $pid ) );
                                 } else {
                                     echo get_the_post_thumbnail( $pid );
                                 }
@@ -1174,9 +1172,9 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                             do_action( 'wpcas_before_post_name', $pid );
 
                             if ( $link !== 'no' ) {
-                                echo sprintf( '<a href="%s" ' . ( $link === 'yes_blank' ? 'target="_blank"' : '' ) . '>%s</a>', get_permalink( $pid ), get_the_title( $pid ) );
+                                echo sprintf( '<a href="%s" ' . ( $link === 'yes_blank' ? 'target="_blank"' : '' ) . '>%s</a>', esc_url( get_permalink( $pid ) ), esc_html( get_the_title( $pid ) ) );
                             } else {
-                                echo get_the_title( $pid );
+                                echo esc_html( get_the_title( $pid ) );
                             }
 
                             do_action( 'wpcas_after_post_name', $pid );
@@ -1196,7 +1194,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                     if ( $more_results ) {
                         $more_results_txt = self::localization( 'more_results', /* translators: count */ esc_html__( 'More results (%d)', 'wpc-ajax-search' ) );
 
-                        echo apply_filters( 'wpcas_more_results', '<div class="wpcas-more-results"><div class="wpcas-more-results-inner"><a href="' . esc_url( home_url( '/?post_type=product&s=' . $keyword ) ) . '">' . sprintf( $more_results_txt, $more_results ) . '</a></div></div>', $products, $keyword, $category, $more_results );
+                        echo wp_kses_post( apply_filters( 'wpcas_more_results', '<div class="wpcas-more-results"><div class="wpcas-more-results-inner"><a href="' . esc_url( home_url( '/?post_type=product&s=' . $keyword ) ) . '">' . sprintf( $more_results_txt, $more_results ) . '</a></div></div>', $products, $keyword, $category, $more_results ) );
                     }
 
                     echo '</div>';
@@ -1286,7 +1284,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                     $area_attrs = apply_filters( 'wpcas_area_attrs', [] );
                     ?>
                     <div id="wpcas-area"
-                         class="<?php echo esc_attr( $area_class ); ?>" <?php echo self::data_attributes( $area_attrs ); ?>>
+                         class="<?php echo esc_attr( $area_class ); ?>" <?php echo wp_kses_post( self::data_attributes( $area_attrs ) ); ?>>
                         <div class="wpcas-area-top">
                             <span><?php echo esc_html( $heading ); ?></span>
 
@@ -1299,7 +1297,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                 <div class="wpcas-search-input-inner">
                                     <?php
                                     echo '<span class="wpcas-search-input-icon"></span>';
-                                    echo apply_filters( 'wpcas_search_input', '<input name="wpcas-search-input-value" id="wpcas_search_keyword" type="search" placeholder="' . esc_attr( self::localization( 'placeholder', esc_html__( 'Search products…', 'wpc-ajax-search' ) ) ) . '"/>' );
+                                    echo wp_kses_post( apply_filters( 'wpcas_search_input', '<input name="wpcas-search-input-value" id="wpcas_search_keyword" type="search" placeholder="' . esc_attr( self::localization( 'placeholder', esc_html__( 'Search products…', 'wpc-ajax-search' ) ) ) . '"/>' ) );
 
                                     if ( ( self::get_setting( 'search_category', 'yes' ) === 'yes' ) && ( $post_types === [ 'product' ] ) ) {
                                         $category_args = apply_filters( 'wpcas_search_category_args', [
@@ -1320,8 +1318,8 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                             <?php if ( ! empty( $popular_keywords ) ) { ?>
                                 <div class="wpcas-popular-keywords">
                                     <div class="wpcas-popular-keywords-inner">
-                                        <span class="wpcas-popular-keywords-label"><?php echo self::localization( 'popular_keywords', esc_html__( 'Popular keywords:', 'wpc-ajax-search' ) ); ?></span>
-                                        <?php echo implode( ', ', $popular_keywords ); ?>
+                                        <span class="wpcas-popular-keywords-label"><?php echo wp_kses_post( self::localization( 'popular_keywords', esc_html__( 'Popular keywords:', 'wpc-ajax-search' ) ) ); ?></span>
+                                        <?php echo wp_kses_post( implode( ', ', $popular_keywords ) ); ?>
                                     </div>
                                 </div>
                             <?php } ?>
@@ -1402,7 +1400,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                 function item_add_to_cart( $product ) {
                     if ( is_a( $product, 'WC_Product' ) ) {
-                        echo apply_filters( 'wpcas_item_add_to_cart', '<div class="atc-btn">' . do_shortcode( '[add_to_cart style="" show_price="false" id="' . esc_attr( $product->get_id() ) . '"]' ) . '</div>', $product );
+                        echo wp_kses_post( apply_filters( 'wpcas_item_add_to_cart', '<div class="atc-btn">' . do_shortcode( '[add_to_cart style="" show_price="false" id="' . esc_attr( $product->get_id() ) . '"]' ) . '</div>', $product ) );
                     }
                 }
 
@@ -1553,7 +1551,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                 <?php
                                 if ( empty( $rule ) ) {
                                     // new
-                                    echo '<textarea id="wpcas_message_' . $rule_key . '" name="wpcas_rules[' . $rule_key . '][message]" rows="10" class="wpcas_editor"></textarea>';
+                                    echo '<textarea id="wpcas_message_' . esc_attr( $rule_key ) . '" name="wpcas_rules[' . esc_attr( $rule_key ) . '][message]" rows="10" class="wpcas_editor"></textarea>';
                                 } else {
                                     wp_editor( $message, 'wpcas_message_' . $rule_key, [
                                             'textarea_name' => 'wpcas_rules[' . $rule_key . '][message]',
@@ -1734,7 +1732,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                 function ajax_add_rule() {
                     if ( ! apply_filters( 'wpcas_disable_nonce_check', false, 'add_rule' ) ) {
-                        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'wpcas_nonce' ) ) {
+                        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcas_nonce' ) ) {
                             die( 'Permissions check failed!' );
                         }
                     }
@@ -1745,7 +1743,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                 function ajax_add_condition() {
                     if ( ! apply_filters( 'wpcas_disable_nonce_check', false, 'add_condition' ) ) {
-                        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'wpcas_nonce' ) ) {
+                        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcas_nonce' ) ) {
                             die( 'Permissions check failed!' );
                         }
                     }
@@ -1758,7 +1756,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                 function ajax_add_combined() {
                     if ( ! apply_filters( 'wpcas_disable_nonce_check', false, 'add_combined' ) ) {
-                        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'wpcas_nonce' ) ) {
+                        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcas_nonce' ) ) {
                             die( 'Permissions check failed!' );
                         }
                     }
@@ -1770,15 +1768,19 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                 }
 
                 function ajax_search_term() {
+                    if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['nonce'] ) ), 'wpcas_nonce' ) ) {
+                        wp_send_json( [] );
+                    }
+
                     $return = [];
 
                     $args = [
-                            'taxonomy'   => sanitize_text_field( $_REQUEST['taxonomy'] ),
+                            'taxonomy'   => sanitize_text_field( wp_unslash( $_REQUEST['taxonomy'] ?? '' ) ),
                             'orderby'    => 'id',
                             'order'      => 'ASC',
                             'hide_empty' => false,
                             'fields'     => 'all',
-                            'name__like' => sanitize_text_field( $_REQUEST['q'] ),
+                            'name__like' => sanitize_text_field( wp_unslash( $_REQUEST['q'] ?? '' ) ),
                     ];
 
                     $terms = get_terms( $args );
@@ -1995,7 +1997,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                         echo '<div class="wpcas-post-thumb">';
                         do_action( 'wpcas_before_post_thumbnail', $post_id );
 
-                        echo '<a href="' . get_permalink( $post_id ) . '">' . get_the_post_thumbnail( $post_id, 'thumbnail' ) . '</a>';
+                        echo '<a href="' . esc_url( get_permalink( $post_id ) ) . '">' . get_the_post_thumbnail( $post_id, 'thumbnail' ) . '</a>';
 
                         do_action( 'wpcas_after_post_thumbnail', $post_id );
                         echo '</div><!-- /wpcas-post-thumb -->';
@@ -2006,7 +2008,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                         echo '<div class="wpcas-post-name">';
                         do_action( 'wpcas_before_post_name', $post_id );
 
-                        echo '<a href="' . get_permalink( $post_id ) . '">' . get_the_title( $post_id ) . '</a>';
+                        echo '<a href="' . esc_url( get_permalink( $post_id ) ) . '">' . esc_html( get_the_title( $post_id ) ) . '</a>';
 
                         do_action( 'wpcas_after_post_name', $post_id );
                         echo '</div><!-- /wpcas-post-name -->';
@@ -2043,10 +2045,14 @@ if ( ! function_exists( 'wpcas_delete_folder' ) ) {
         $files = array_diff( scandir( $dir ), [ '.', '..' ] );
 
         foreach ( $files as $file ) {
-            ( is_dir( "$dir/$file" ) ) ? wpcas_delete_folder( "$dir/$file" ) : unlink( "$dir/$file" );
+            ( is_dir( "$dir/$file" ) ) ? wpcas_delete_folder( "$dir/$file" ) : wp_delete_file( "$dir/$file" );
         }
 
-        return rmdir( $dir );
+        global $wp_filesystem;
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
+
+        return $wp_filesystem->rmdir( $dir );
     }
 }
 

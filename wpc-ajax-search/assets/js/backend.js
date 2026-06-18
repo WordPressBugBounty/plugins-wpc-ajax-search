@@ -246,7 +246,7 @@
         ajax: {
           url: ajaxurl, dataType: 'json', delay: 250, data: function(params) {
             return {
-              q: params.term, action: 'wpcas_search_term', taxonomy: apply,
+              q: params.term, action: 'wpcas_search_term', taxonomy: apply, nonce: wpcas_vars.wpcas_nonce,
             };
           }, processResults: function(data) {
             var options = [];
@@ -345,7 +345,7 @@
         ajax: {
           url: ajaxurl, dataType: 'json', delay: 250, data: function(params) {
             return {
-              q: params.term, action: 'wpcas_search_term', taxonomy: taxonomy,
+              q: params.term, action: 'wpcas_search_term', taxonomy: taxonomy, nonce: wpcas_vars.wpcas_nonce,
             };
           }, processResults: function(data) {
             var options = [];
