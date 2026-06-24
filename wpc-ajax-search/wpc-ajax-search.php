@@ -3,7 +3,7 @@
 Plugin Name: WPC AJAX Search for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: An interaction search popup for WooCommerce.
-Version: 2.5.3
+Version: 2.5.4
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: wpc-ajax-search
@@ -19,7 +19,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.5.3' );
+! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.5.4' );
 ! defined( 'WPCAS_LITE' ) && define( 'WPCAS_LITE', __FILE__ );
 ! defined( 'WPCAS_FILE' ) && define( 'WPCAS_FILE', __FILE__ );
 ! defined( 'WPCAS_URI' ) && define( 'WPCAS_URI', plugin_dir_url( __FILE__ ) );
@@ -1284,7 +1284,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                     $area_attrs = apply_filters( 'wpcas_area_attrs', [] );
                     ?>
                     <div id="wpcas-area"
-                         class="<?php echo esc_attr( $area_class ); ?>" <?php echo wp_kses_post( self::data_attributes( $area_attrs ) ); ?>>
+                         class="<?php echo esc_attr( $area_class ); ?>" <?php echo self::data_attributes( $area_attrs ); ?>>
                         <div class="wpcas-area-top">
                             <span><?php echo esc_html( $heading ); ?></span>
 
@@ -1297,7 +1297,21 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                 <div class="wpcas-search-input-inner">
                                     <?php
                                     echo '<span class="wpcas-search-input-icon"></span>';
-                                    echo wp_kses_post( apply_filters( 'wpcas_search_input', '<input name="wpcas-search-input-value" id="wpcas_search_keyword" type="search" placeholder="' . esc_attr( self::localization( 'placeholder', esc_html__( 'Search products…', 'wpc-ajax-search' ) ) ) . '"/>' ) );
+                                    echo wp_kses( apply_filters( 'wpcas_search_input', '<input name="wpcas-search-input-value" id="wpcas_search_keyword" type="search" placeholder="' . esc_attr( self::localization( 'placeholder', esc_html__( 'Search products…', 'wpc-ajax-search' ) ) ) . '"/>' ), [
+                                        'input' => [
+                                            'name'        => [],
+                                            'id'          => [],
+                                            'type'        => [],
+                                            'value'       => [],
+                                            'placeholder' => [],
+                                            'class'       => [],
+                                            'style'       => [],
+                                            'disabled'    => [],
+                                            'readonly'    => [],
+                                            'autocomplete' => [],
+                                            'data-*'      => [],
+                                        ],
+                                    ] );
 
                                     if ( ( self::get_setting( 'search_category', 'yes' ) === 'yes' ) && ( $post_types === [ 'product' ] ) ) {
                                         $category_args = apply_filters( 'wpcas_search_category_args', [
@@ -1400,7 +1414,13 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                 function item_add_to_cart( $product ) {
                     if ( is_a( $product, 'WC_Product' ) ) {
-                        echo wp_kses_post( apply_filters( 'wpcas_item_add_to_cart', '<div class="atc-btn">' . do_shortcode( '[add_to_cart style="" show_price="false" id="' . esc_attr( $product->get_id() ) . '"]' ) . '</div>', $product ) );
+                        echo wp_kses( apply_filters( 'wpcas_item_add_to_cart', '<div class="atc-btn">' . do_shortcode( '[add_to_cart style="" show_price="false" id="' . esc_attr( $product->get_id() ) . '"]' ) . '</div>', $product ), array_merge( wp_kses_allowed_html( 'post' ), [
+                            'form'   => [ 'class' => [], 'id' => [], 'action' => [], 'method' => [], 'enctype' => [], 'data-*' => [] ],
+                            'input'  => [ 'type' => [], 'name' => [], 'value' => [], 'class' => [], 'id' => [], 'style' => [], 'data-*' => [], 'hidden' => [], 'readonly' => [], 'disabled' => [] ],
+                            'button' => [ 'type' => [], 'name' => [], 'value' => [], 'class' => [], 'id' => [], 'style' => [], 'data-*' => [], 'disabled' => [], 'aria-label' => [], 'aria-describedby' => [] ],
+                            'select' => [ 'name' => [], 'id' => [], 'class' => [], 'style' => [], 'data-*' => [], 'disabled' => [], 'multiple' => [] ],
+                            'option' => [ 'value' => [], 'selected' => [], 'disabled' => [] ],
+                        ] ) );
                     }
                 }
 

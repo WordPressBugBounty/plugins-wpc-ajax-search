@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPC AJAX Search for WooCommerce 2.5.3\n"
+"Project-Id-Version: WPC AJAX Search for WooCommerce 2.5.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpc-ajax-search\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-18T16:03:47+00:00\n"
+"POT-Creation-Date: 2026-06-24T05:50:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wpc-ajax-search\n"
@@ -361,7 +361,7 @@ msgstr ""
 #: wpc-ajax-search.php:745
 #: wpc-ajax-search.php:1265
 #: wpc-ajax-search.php:1280
-#: wpc-ajax-search.php:1383
+#: wpc-ajax-search.php:1397
 msgid "Search"
 msgstr ""
 
@@ -461,7 +461,7 @@ msgstr ""
 
 #: wpc-ajax-search.php:758
 #: wpc-ajax-search.php:763
-#: wpc-ajax-search.php:1321
+#: wpc-ajax-search.php:1335
 msgid "Popular keywords:"
 msgstr ""
 
@@ -514,244 +514,244 @@ msgstr ""
 msgid "Collapse All"
 msgstr ""
 
-#: wpc-ajax-search.php:1308
+#: wpc-ajax-search.php:1322
 msgid "All categories"
 msgstr ""
 
-#: wpc-ajax-search.php:1422
+#: wpc-ajax-search.php:1442
 msgid "remove"
 msgstr ""
 
-#: wpc-ajax-search.php:1427
-#: wpc-ajax-search.php:1594
+#: wpc-ajax-search.php:1447
+#: wpc-ajax-search.php:1614
 msgid "Name"
 msgstr ""
 
-#: wpc-ajax-search.php:1433
+#: wpc-ajax-search.php:1453
 msgid "For management only."
 msgstr ""
 
-#: wpc-ajax-search.php:1447
+#: wpc-ajax-search.php:1467
 msgid "Keyword conditions"
 msgstr ""
 
-#: wpc-ajax-search.php:1448
+#: wpc-ajax-search.php:1468
 msgid "Describe the applicable keywords."
 msgstr ""
 
-#: wpc-ajax-search.php:1466
-#: wpc-ajax-search.php:1646
+#: wpc-ajax-search.php:1486
+#: wpc-ajax-search.php:1666
 msgid "+ Add condition"
 msgstr ""
 
-#: wpc-ajax-search.php:1489
+#: wpc-ajax-search.php:1509
 msgid "Input characters are more than"
 msgstr ""
 
-#: wpc-ajax-search.php:1490
+#: wpc-ajax-search.php:1510
 msgid "Input characters are fewer than"
 msgstr ""
 
-#: wpc-ajax-search.php:1491
+#: wpc-ajax-search.php:1511
 msgid "Input words are more than"
 msgstr ""
 
-#: wpc-ajax-search.php:1492
+#: wpc-ajax-search.php:1512
 msgid "Input words are fewer than"
 msgstr ""
 
-#: wpc-ajax-search.php:1493
+#: wpc-ajax-search.php:1513
 msgid "Include either keyword"
 msgstr ""
 
-#: wpc-ajax-search.php:1494
+#: wpc-ajax-search.php:1514
 msgid "Include all keyword(s)"
 msgstr ""
 
-#: wpc-ajax-search.php:1495
+#: wpc-ajax-search.php:1515
 msgid "Exclude keyword(s)"
 msgstr ""
 
-#: wpc-ajax-search.php:1496
+#: wpc-ajax-search.php:1516
 msgid "Match regular expression (RegEx)"
 msgstr ""
 
-#: wpc-ajax-search.php:1534
+#: wpc-ajax-search.php:1554
 msgid "Returned results"
 msgstr ""
 
-#: wpc-ajax-search.php:1535
+#: wpc-ajax-search.php:1555
 msgid "Define products or message shown in the search results for above keyword(s)."
 msgstr ""
 
-#: wpc-ajax-search.php:1538
+#: wpc-ajax-search.php:1558
 msgid "Output types"
 msgstr ""
 
-#: wpc-ajax-search.php:1542
-#: wpc-ajax-search.php:1612
+#: wpc-ajax-search.php:1562
+#: wpc-ajax-search.php:1632
 msgid "Products"
 msgstr ""
 
-#: wpc-ajax-search.php:1543
+#: wpc-ajax-search.php:1563
 msgid "Custom message"
 msgstr ""
 
-#: wpc-ajax-search.php:1549
+#: wpc-ajax-search.php:1569
 msgid "Message"
 msgstr ""
 
-#: wpc-ajax-search.php:1562
+#: wpc-ajax-search.php:1582
 msgid "You can use shortcode(s) in this custom message."
 msgstr ""
 
-#: wpc-ajax-search.php:1569
+#: wpc-ajax-search.php:1589
 msgid "Source"
 msgstr ""
 
-#: wpc-ajax-search.php:1573
+#: wpc-ajax-search.php:1593
 msgid "All products"
 msgstr ""
 
-#: wpc-ajax-search.php:1574
+#: wpc-ajax-search.php:1594
 msgid "Selected products"
 msgstr ""
 
-#: wpc-ajax-search.php:1575
-#: wpc-ajax-search.php:1632
+#: wpc-ajax-search.php:1595
+#: wpc-ajax-search.php:1652
 msgid "Combined"
 msgstr ""
 
-#: wpc-ajax-search.php:1584
+#: wpc-ajax-search.php:1604
 msgid "Limit"
 msgstr ""
 
-#: wpc-ajax-search.php:1589
+#: wpc-ajax-search.php:1609
 msgid "Order by"
 msgstr ""
 
-#: wpc-ajax-search.php:1591
-#: wpc-ajax-search.php:1604
+#: wpc-ajax-search.php:1611
+#: wpc-ajax-search.php:1624
 msgid "Default"
 msgstr ""
 
-#: wpc-ajax-search.php:1592
+#: wpc-ajax-search.php:1612
 msgid "None"
 msgstr ""
 
-#: wpc-ajax-search.php:1593
+#: wpc-ajax-search.php:1613
 msgid "ID"
 msgstr ""
 
-#: wpc-ajax-search.php:1595
+#: wpc-ajax-search.php:1615
 msgid "Type"
 msgstr ""
 
-#: wpc-ajax-search.php:1596
+#: wpc-ajax-search.php:1616
 msgid "Rand"
 msgstr ""
 
-#: wpc-ajax-search.php:1597
+#: wpc-ajax-search.php:1617
 msgid "Date"
 msgstr ""
 
-#: wpc-ajax-search.php:1598
-#: wpc-ajax-search.php:1690
+#: wpc-ajax-search.php:1618
+#: wpc-ajax-search.php:1710
 msgid "Price"
 msgstr ""
 
-#: wpc-ajax-search.php:1599
+#: wpc-ajax-search.php:1619
 msgid "Modified"
 msgstr ""
 
-#: wpc-ajax-search.php:1602
+#: wpc-ajax-search.php:1622
 msgid "Order"
 msgstr ""
 
-#: wpc-ajax-search.php:1605
+#: wpc-ajax-search.php:1625
 msgid "DESC"
 msgstr ""
 
-#: wpc-ajax-search.php:1606
+#: wpc-ajax-search.php:1626
 msgid "ASC"
 msgstr ""
 
-#: wpc-ajax-search.php:1617
+#: wpc-ajax-search.php:1637
 msgid "Search for a product&hellip;"
 msgstr ""
 
-#: wpc-ajax-search.php:1635
+#: wpc-ajax-search.php:1655
 msgid "* Configure to find products that match all listed conditions."
 msgstr ""
 
-#: wpc-ajax-search.php:1651
+#: wpc-ajax-search.php:1671
 msgid "Terms"
 msgstr ""
 
-#: wpc-ajax-search.php:1700
+#: wpc-ajax-search.php:1720
 msgid "including"
 msgstr ""
 
-#: wpc-ajax-search.php:1701
+#: wpc-ajax-search.php:1721
 msgid "excluding"
 msgstr ""
 
-#: wpc-ajax-search.php:1718
+#: wpc-ajax-search.php:1738
 msgid "equal"
 msgstr ""
 
-#: wpc-ajax-search.php:1719
+#: wpc-ajax-search.php:1739
 msgid "not equal"
 msgstr ""
 
-#: wpc-ajax-search.php:1720
+#: wpc-ajax-search.php:1740
 msgid "greater"
 msgstr ""
 
-#: wpc-ajax-search.php:1721
+#: wpc-ajax-search.php:1741
 msgid "less than"
 msgstr ""
 
-#: wpc-ajax-search.php:1722
+#: wpc-ajax-search.php:1742
 msgid "greater or equal"
 msgstr ""
 
-#: wpc-ajax-search.php:1723
+#: wpc-ajax-search.php:1743
 msgid "less or equal"
 msgstr ""
 
-#: wpc-ajax-search.php:1863
+#: wpc-ajax-search.php:1883
 msgid "Placeholder result"
 msgstr ""
 
-#: wpc-ajax-search.php:1864
+#: wpc-ajax-search.php:1884
 msgid "Before returned message"
 msgstr ""
 
-#: wpc-ajax-search.php:1865
+#: wpc-ajax-search.php:1885
 msgid "After returned message"
 msgstr ""
 
-#: wpc-ajax-search.php:1866
+#: wpc-ajax-search.php:1886
 msgid "Before returned products"
 msgstr ""
 
-#: wpc-ajax-search.php:1867
+#: wpc-ajax-search.php:1887
 msgid "After returned products"
 msgstr ""
 
-#: wpc-ajax-search.php:1868
+#: wpc-ajax-search.php:1888
 msgid "Before not-found message"
 msgstr ""
 
-#: wpc-ajax-search.php:1869
+#: wpc-ajax-search.php:1889
 msgid "After not-found message"
 msgstr ""
 
-#: wpc-ajax-search.php:1870
+#: wpc-ajax-search.php:1890
 msgid "Before search result"
 msgstr ""
 
-#: wpc-ajax-search.php:1871
+#: wpc-ajax-search.php:1891
 msgid "After search result"
 msgstr ""
