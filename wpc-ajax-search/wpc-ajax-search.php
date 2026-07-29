@@ -3,7 +3,7 @@
 Plugin Name: WPC AJAX Search for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: An interaction search popup for WooCommerce.
-Version: 2.5.4
+Version: 2.5.5
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: wpc-ajax-search
@@ -12,14 +12,14 @@ Requires Plugins: woocommerce
 Requires at least: 5.9
 Tested up to: 7.0
 WC requires at least: 3.0
-WC tested up to: 10.8
+WC tested up to: 10.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.5.4' );
+! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.5.5' );
 ! defined( 'WPCAS_LITE' ) && define( 'WPCAS_LITE', __FILE__ );
 ! defined( 'WPCAS_FILE' ) && define( 'WPCAS_FILE', __FILE__ );
 ! defined( 'WPCAS_URI' ) && define( 'WPCAS_URI', plugin_dir_url( __FILE__ ) );
@@ -298,7 +298,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                             </div>
                         </div>
                         <h2></h2>
-                        <?php if ( isset( $_GET['settings-updated'] ) && sanitize_key( wp_unslash( $_GET['settings-updated'] ) ) ) { ?>
+                        <?php if ( isset( $_GET['settings-updated'] ) && sanitize_key( wp_unslash( $_GET['settings-updated'] ?? '' ) ) ) { ?>
                             <div class="notice notice-success is-dismissible">
                                 <p><?php esc_html_e( 'Settings updated.', 'wpc-ajax-search' ); ?></p>
                             </div>
@@ -682,7 +682,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                                 <input name="wpcas_settings[cache_time]" type="number" min="0"
                                                        max="8760"
                                                        value="<?php echo esc_attr( self::get_setting( 'cache_time', 24 ) ); ?>"/>
-                                                <?php if ( isset( $_GET['act'] ) && ( sanitize_key( wp_unslash( $_GET['act'] ) ) === 'clear_cache' ) ) {
+                                                <?php if ( isset( $_GET['act'] ) && ( sanitize_key( wp_unslash( $_GET['act'] ?? '' ) ) === 'clear_cache' ) ) {
                                                     global $wpdb;
 
                                                     // clear database cache
@@ -1768,7 +1768,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                         }
                     }
 
-                    $rule_key = isset( $_POST['key'] ) ? sanitize_key( $_POST['key'] ) : self::generate_key();
+                    $rule_key = isset( $_POST['key'] ) ? sanitize_key( wp_unslash( $_POST['key'] ?? '' ) ) : self::generate_key();
 
                     self::condition( '', [], $rule_key );
                     wp_die();
@@ -1781,7 +1781,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                         }
                     }
 
-                    $rule_key = isset( $_POST['key'] ) ? sanitize_key( $_POST['key'] ) : self::generate_key();
+                    $rule_key = isset( $_POST['key'] ) ? sanitize_key( wp_unslash( $_POST['key'] ?? '' ) ) : self::generate_key();
 
                     self::combined( '', [], $rule_key );
                     wp_die();
