@@ -3,28 +3,27 @@
 Plugin Name: WPC AJAX Search for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: An interaction search popup for WooCommerce.
-Version: 2.5.5
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: wpc-ajax-search
 Domain Path: /languages/
 Requires Plugins: woocommerce
+Version: 2.5.6
 Requires at least: 5.9
-Tested up to: 7.0
 WC requires at least: 3.0
-WC tested up to: 10.9
+WC tested up to: 11.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.5.5' );
+! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.5.6' );
 ! defined( 'WPCAS_LITE' ) && define( 'WPCAS_LITE', __FILE__ );
 ! defined( 'WPCAS_FILE' ) && define( 'WPCAS_FILE', __FILE__ );
 ! defined( 'WPCAS_URI' ) && define( 'WPCAS_URI', plugin_dir_url( __FILE__ ) );
 ! defined( 'WPCAS_DIR' ) && define( 'WPCAS_DIR', plugin_dir_path( __FILE__ ) );
-! defined( 'WPCAS_SUPPORT' ) && define( 'WPCAS_SUPPORT', 'https://wpclever.net/support?utm_source=support&utm_medium=wpcas&utm_campaign=wporg' );
+! defined( 'WPCAS_SUPPORT' ) && define( 'WPCAS_SUPPORT', 'https://wpclever.net/support/?utm_source=support&utm_medium=wpcas&utm_campaign=wporg' );
 ! defined( 'WPCAS_REVIEWS' ) && define( 'WPCAS_REVIEWS', 'https://wordpress.org/support/plugin/wpc-ajax-search/reviews/' );
 ! defined( 'WPCAS_CHANGELOG' ) && define( 'WPCAS_CHANGELOG', 'https://wordpress.org/plugins/wpc-ajax-search/#developers' );
 ! defined( 'WPCAS_DISCUSSION' ) && define( 'WPCAS_DISCUSSION', 'https://wordpress.org/support/plugin/wpc-ajax-search' );
