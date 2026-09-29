@@ -8,7 +8,7 @@ Author URI: https://wpclever.net
 Text Domain: wpc-ajax-search
 Domain Path: /languages/
 Requires Plugins: woocommerce
-Version: 2.5.6
+Version: 2.6.0
 Requires at least: 5.9
 WC requires at least: 3.0
 WC tested up to: 11.1
@@ -18,7 +18,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.5.6' );
+! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.6.0' );
 ! defined( 'WPCAS_LITE' ) && define( 'WPCAS_LITE', __FILE__ );
 ! defined( 'WPCAS_FILE' ) && define( 'WPCAS_FILE', __FILE__ );
 ! defined( 'WPCAS_URI' ) && define( 'WPCAS_URI', plugin_dir_url( __FILE__ ) );
@@ -97,6 +97,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                     add_action( 'wp_ajax_wpcas_add_condition', [ $this, 'ajax_add_condition' ] );
                     add_action( 'wp_ajax_wpcas_add_combined', [ $this, 'ajax_add_combined' ] );
                     add_action( 'wp_ajax_wpcas_search_term', [ $this, 'ajax_search_term' ] );
+                    add_action( 'wp_ajax_wpcas_simulate', [ $this, 'ajax_simulate' ] );
 
                     // actions
                     if ( self::get_setting( 'compare', 'yes' ) === 'yes' ) {
@@ -186,6 +187,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                 function admin_enqueue_scripts( $hook ) {
                     if ( str_contains( $hook, 'wpcas' ) ) {
                         wp_enqueue_editor();
+                        wp_enqueue_style( 'wpcas-hint', WPCAS_URI . 'assets/css/hint.css', [], WPCAS_VERSION );
                         wp_enqueue_style( 'wpcas-backend', WPCAS_URI . 'assets/css/backend.css', [ 'woocommerce_admin_styles' ], WPCAS_VERSION );
                         wp_enqueue_script( 'wpcas-backend', WPCAS_URI . 'assets/js/backend.js', [
                                 'jquery',
@@ -257,7 +259,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                 }
 
                 function last_saved( $value, $option ) {
-                    if ( $option == 'wpcas_settings' || $option == 'wpcas_rules_settings' ) {
+                    if ( $option == 'wpcas_settings' || $option == 'wpcas_rules_settings' || $option == 'wpcas_localization' ) {
                         $value['_last_saved']    = current_time( 'timestamp' );
                         $value['_last_saved_by'] = get_current_user_id();
                     }
@@ -276,58 +278,70 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                     add_thickbox();
                     $active_tab = sanitize_key( wp_unslash( $_GET['tab'] ?? 'settings' ) );
                     ?>
-                    <div class="wpclever_settings_page wrap">
-                        <div class="wpclever_settings_page_header">
-                            <a class="wpclever_settings_page_header_logo" href="https://wpclever.net/"
-                               target="_blank" title="Visit wpclever.net"></a>
-                            <div class="wpclever_settings_page_header_text">
-                                <div class="wpclever_settings_page_title"><?php echo esc_html__( 'WPC AJAX Search', 'wpc-ajax-search' ) . ' ' . esc_html( WPCAS_VERSION ) . ' ' . ( defined( 'WPCAS_PREMIUM' ) ? '<span class="premium" style="display: none">' . esc_html__( 'Premium', 'wpc-ajax-search' ) . '</span>' : '' ); ?></div>
-                                <div class="wpclever_settings_page_desc about-text">
-                                    <p>
-                                        <?php printf( /* translators: stars */ esc_html__( 'Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating.', 'wpc-ajax-search' ), '<span style="color:#ffb900">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' ); ?>
-                                        <br/>
-                                        <a href="<?php echo esc_url( WPCAS_REVIEWS ); ?>"
-                                           target="_blank"><?php esc_html_e( 'Reviews', 'wpc-ajax-search' ); ?></a> |
-                                        <a href="<?php echo esc_url( WPCAS_CHANGELOG ); ?>"
-                                           target="_blank"><?php esc_html_e( 'Changelog', 'wpc-ajax-search' ); ?></a> |
-                                        <a href="<?php echo esc_url( WPCAS_DISCUSSION ); ?>"
-                                           target="_blank"><?php esc_html_e( 'Discussion', 'wpc-ajax-search' ); ?></a>
-                                    </p>
+                    <div class="wrap wpcas-settings-wrap">
+                        <div class="wpcas-settings-header">
+                            <div class="wpcas-settings-header-inner">
+                                <div class="wpcas-header-left">
+                                    <div class="wpcas-logo">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="11" cy="11" r="8"></circle>
+                                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h1>
+                                            <?php echo esc_html__( 'WPC AJAX Search', 'wpc-ajax-search' ) . ' ' . esc_html( WPCAS_VERSION ); ?>
+                                            <?php if ( defined( 'WPCAS_PREMIUM' ) ) : ?>
+                                                <span class="premium"><?php esc_html_e( 'Premium', 'wpc-ajax-search' ); ?></span>
+                                            <?php endif; ?>
+                                        </h1>
+                                        <p class="wpcas-tagline">
+                                            <?php esc_html_e( 'A powerful and fast AJAX search plugin for WooCommerce.', 'wpc-ajax-search' ); ?>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <h2></h2>
+
                         <?php if ( isset( $_GET['settings-updated'] ) && sanitize_key( wp_unslash( $_GET['settings-updated'] ?? '' ) ) ) { ?>
                             <div class="notice notice-success is-dismissible">
                                 <p><?php esc_html_e( 'Settings updated.', 'wpc-ajax-search' ); ?></p>
                             </div>
                         <?php } ?>
-                        <div class="wpclever_settings_page_nav">
-                            <h2 class="nav-tab-wrapper">
+
+                        <div class="wpcas-admin-nav">
+                            <div class="wpcas-nav-container">
                                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-wpcas&tab=settings' ) ); ?>"
-                                   class="<?php echo esc_attr( $active_tab === 'settings' ? 'nav-tab nav-tab-active' : 'nav-tab' ); ?>">
+                                   class="wpcas-nav-item <?php echo $active_tab === 'settings' ? 'active' : ''; ?>">
                                     <?php esc_html_e( 'Settings', 'wpc-ajax-search' ); ?>
                                 </a>
                                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-wpcas&tab=smart' ) ); ?>"
-                                   class="<?php echo esc_attr( $active_tab === 'smart' ? 'nav-tab nav-tab-active' : 'nav-tab' ); ?>">
+                                   class="wpcas-nav-item <?php echo $active_tab === 'smart' ? 'active' : ''; ?>">
                                     <?php esc_html_e( 'Smart Search', 'wpc-ajax-search' ); ?>
                                 </a>
                                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-wpcas&tab=localization' ) ); ?>"
-                                   class="<?php echo esc_attr( $active_tab === 'localization' ? 'nav-tab nav-tab-active' : 'nav-tab' ); ?>">
+                                   class="wpcas-nav-item <?php echo $active_tab === 'localization' ? 'active' : ''; ?>">
                                     <?php esc_html_e( 'Localization', 'wpc-ajax-search' ); ?>
                                 </a>
-                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-wpcas&tab=premium' ) ); ?>"
-                                   class="<?php echo esc_attr( $active_tab === 'premium' ? 'nav-tab nav-tab-active' : 'nav-tab' ); ?>"
-                                   style="color: #c9356e">
-                                    <?php esc_html_e( 'Premium Version', 'wpc-ajax-search' ); ?>
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-wpcas&tab=simulator' ) ); ?>"
+                                   class="wpcas-nav-item <?php echo $active_tab === 'simulator' ? 'active' : ''; ?>">
+                                    <?php esc_html_e( 'Simulator', 'wpc-ajax-search' ); ?>
                                 </a>
+                                <?php if ( ! defined( 'WPCAS_PREMIUM' ) ) : ?>
+                                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-wpcas&tab=premium' ) ); ?>"
+                                       class="wpcas-nav-item wpc-premium <?php echo $active_tab === 'premium' ? 'active' : ''; ?>">
+                                        <?php esc_html_e( 'Premium Version', 'wpc-ajax-search' ); ?>
+                                    </a>
+                                <?php endif; ?>
                                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-kit' ) ); ?>"
-                                   class="nav-tab">
+                                   class="wpcas-nav-item">
                                     <?php esc_html_e( 'Essential Kit', 'wpc-ajax-search' ); ?>
                                 </a>
-                            </h2>
+                            </div>
                         </div>
-                        <div class="wpclever_settings_page_content">
+
+                        <div class="wpcas-tab-content active">
                             <?php if ( $active_tab === 'settings' ) {
                                 $auto_show             = self::get_setting( 'auto_show', 'yes' );
                                 $overlay_layer         = self::get_setting( 'overlay_layer', 'yes' );
@@ -350,45 +364,55 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                 $cache_method          = self::get_setting( 'cache_method', 'file' );
                                 ?>
                                 <form method="post" action="options.php">
-                                    <table class="form-table">
-                                        <tr class="heading">
-                                            <th><?php esc_html_e( 'General', 'wpc-ajax-search' ); ?></th>
-                                            <td><?php esc_html_e( 'General settings.', 'wpc-ajax-search' ); ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Auto-open', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                    <div class="wpcas-card">
+                                        <div class="wpcas-card-header">
+                                            <div>
+                                                <h2 class="wpcas-card-title"><?php esc_html_e( 'General', 'wpc-ajax-search' ); ?></h2>
+                                                <p class="wpcas-card-desc"><?php esc_html_e( 'General settings for search behavior, popup display, and input appearance.', 'wpc-ajax-search' ); ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Auto-open', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[auto_show]">
                                                     <option value="yes" <?php selected( $auto_show, 'yes' ); ?>><?php esc_html_e( 'Yes, open popup', 'wpc-ajax-search' ); ?></option>
                                                     <option value="yes_inline" <?php selected( $auto_show, 'yes_inline' ); ?>><?php esc_html_e( 'Yes, open inline', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $auto_show, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'Do the AJAX search when clicking on all search inputs.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Manual show up button', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Manual show up button', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <input type="text" name="wpcas_settings[manual_show]"
-                                                       class="regular-text"
+                                                       class="large-text"
                                                        value="<?php echo esc_attr( self::get_setting( 'manual_show', '' ) ); ?>"
                                                        placeholder="<?php esc_html_e( 'button class or id', 'wpc-ajax-search' ); ?>"/>
                                                 <p class="description"><?php printf( /* translators: selector */ esc_html__( 'The class or id of the button, when clicking on this button the search popup will show up. Example %1$s or %2$s', 'wpc-ajax-search' ), '<code>.search-btn</code>', '<code>#search-btn</code>' ); ?></p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Overlay layer', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Overlay layer', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[overlay_layer]">
                                                     <option value="yes" <?php selected( $overlay_layer, 'yes' ); ?>><?php esc_html_e( 'Show', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $overlay_layer, 'no' ); ?>><?php esc_html_e( 'Hide', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'If you hide the overlay layer, the buyer still can work on your site when the search popup is opening.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Position', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Position', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[position]">
                                                     <option value="01" <?php selected( $position, '01' ); ?>><?php esc_html_e( 'Right', 'wpc-ajax-search' ); ?></option>
                                                     <option value="02" <?php selected( $position, '02' ); ?>><?php esc_html_e( 'Left', 'wpc-ajax-search' ); ?></option>
@@ -396,41 +420,49 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                                     <option value="04" <?php selected( $position, '04' ); ?>><?php esc_html_e( 'Bottom', 'wpc-ajax-search' ); ?></option>
                                                     <option value="05" <?php selected( $position, '05' ); ?>><?php esc_html_e( 'Center', 'wpc-ajax-search' ); ?></option>
                                                 </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Effect', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Effect', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[effect]">
                                                     <option value="yes" <?php selected( $effect, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $effect, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'Enable/disable slide effect.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><?php esc_html_e( 'Use perfect-scrollbar', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Use perfect-scrollbar', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[perfect_scrollbar]">
                                                     <option value="yes" <?php selected( $perfect_scrollbar, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $perfect_scrollbar, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php printf( /* translators: link */ esc_html__( 'Read more about %s', 'wpc-ajax-search' ), '<a href="https://github.com/mdbootstrap/perfect-scrollbar" target="_blank">perfect-scrollbar</a>' ); ?>.</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Close button', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Close button', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[close]">
                                                     <option value="yes" <?php selected( $close, 'yes' ); ?>><?php esc_html_e( 'Show', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $close, 'no' ); ?>><?php esc_html_e( 'Hide', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'Show/hide the close button.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Link to individual product', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Link to individual product', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[link]">
                                                     <option value="yes" <?php selected( $link, 'yes' ); ?>><?php esc_html_e( 'Yes, open in the same tab', 'wpc-ajax-search' ); ?></option>
                                                     <option value="yes_blank" <?php selected( $link, 'yes_blank' ); ?>><?php esc_html_e( 'Yes, open in the new tab', 'wpc-ajax-search' ); ?></option>
@@ -443,11 +475,13 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                                        class="thickbox" title="WPC Smart Quick View">WPC Smart Quick
                                                         View</a> to make it work.
                                                 </p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Compare button', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Compare button', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[compare]">
                                                     <option value="yes" <?php selected( $compare, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $compare, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
@@ -456,11 +490,13 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                                             href="<?php echo esc_url( admin_url( 'plugin-install.php?tab=plugin-information&plugin=woo-smart-compare&TB_iframe=true&width=800&height=550' ) ); ?>"
                                                             class="thickbox"
                                                             title="WPC Smart Compare">WPC Smart Compare</a> to make it work.</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Wishlist button', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Wishlist button', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[wishlist]">
                                                     <option value="yes" <?php selected( $wishlist, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $wishlist, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
@@ -468,48 +504,58 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                                 <span class="description">Please install and activate <a
                                                             href="<?php echo esc_url( admin_url( 'plugin-install.php?tab=plugin-information&plugin=woo-smart-wishlist&TB_iframe=true&width=800&height=550' ) ); ?>"
                                                             class="thickbox" title="WPC Smart Wishlist">WPC Smart Wishlist</a> to make it work.</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Add to cart button', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Add to cart button', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[add_to_cart]">
                                                     <option value="yes" <?php selected( $add_to_cart, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $add_to_cart, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Exclude hidden', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Exclude hidden', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[exclude_hidden]">
                                                     <option value="yes" <?php selected( $exclude_hidden, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $exclude_hidden, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'Exclude hidden products from the search result.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Exclude unpurchasable', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Exclude unpurchasable', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[exclude_unpurchasable]">
                                                     <option value="yes" <?php selected( $exclude_unpurchasable, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $exclude_unpurchasable, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'Exclude unpurchasable products from the search result.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><?php esc_html_e( 'Smart keywords', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <span class="description"><a
-                                                            href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-wpcas&tab=smart' ) ); ?>"
-                                                            target="_blank"><?php esc_html_e( 'Configure smart keywords with many conditions.', 'wpc-ajax-search' ); ?></a></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><?php esc_html_e( 'Special keywords', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Smart keywords', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
+                            <span class="description"><a
+                                        href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-wpcas&tab=smart' ) ); ?>"
+                                        target="_blank"><?php esc_html_e( 'Configure smart keywords with many conditions.', 'wpc-ajax-search' ); ?></a></span>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Special keywords', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <div style="margin-bottom: 10px;">
                                                     <input type="text" name="wpcas_settings[keyword_on_sale]"
                                                            value="<?php echo esc_attr( self::get_setting( 'keyword_on_sale', '' ) ); ?>"/>
@@ -530,47 +576,57 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                                            value="<?php echo esc_attr( self::get_setting( 'keyword_popular', '' ) ); ?>"/>
                                                     <span class="description"><?php esc_html_e( 'Keyword for popular products.', 'wpc-ajax-search' ); ?></span>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><?php esc_html_e( 'Popular keywords', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <textarea name="wpcas_settings[popular_keywords]" rows="5" cols="50"
-                                                          class="large-text"><?php echo esc_textarea( self::get_setting( 'popular_keywords' ) ); ?></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Popular keywords', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
+                            <textarea name="wpcas_settings[popular_keywords]" rows="5" cols="50"
+                                      class="large-text"><?php echo esc_textarea( self::get_setting( 'popular_keywords' ) ); ?></textarea>
                                                 <span class="description"><?php esc_html_e( 'Add popular keywords, split by a comma. It will be shown on the search popup. You also can use above special keywords.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Animated placeholder', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Animated placeholder', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[animated_placeholder]"
                                                         class="wpcas_animated_placeholder">
                                                     <option value="yes" <?php selected( $animated_placeholder, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $animated_placeholder, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'Enable animated placeholder texts.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr class="wpcas-show-if-animated-placeholder">
-                                            <th scope="row"><?php esc_html_e( 'Animated placeholder texts', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <textarea name="wpcas_settings[placeholder_text]" rows="10" cols="50"
-                                                          class="large-text"><?php echo esc_textarea( self::get_setting( 'placeholder_text' ) ); ?></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Animated placeholder texts', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
+                            <textarea name="wpcas_settings[placeholder_text]" rows="10" cols="50"
+                                      class="large-text"><?php echo esc_textarea( self::get_setting( 'placeholder_text' ) ); ?></textarea>
                                                 <span class="description"><?php esc_html_e( 'Add animated placeholder texts, each text in one line.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr class="wpcas-show-if-animated-placeholder">
-                                            <th scope="row"><?php esc_html_e( 'Clicking on placeholder texts', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Clicking on placeholder texts', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[placeholder_clicking]">
                                                     <option value="empty" <?php selected( $placeholder_clicking, 'empty' ); ?>><?php esc_html_e( 'Start with empty search box', 'wpc-ajax-search' ); ?></option>
                                                     <option value="keep" <?php selected( $placeholder_clicking, 'keep' ); ?>><?php esc_html_e( 'Keep the placeholder texts', 'wpc-ajax-search' ); ?></option>
                                                 </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><?php esc_html_e( 'Menu(s)', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Menu(s)', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <?php
                                                 $nav_menus   = get_terms( [
                                                         'taxonomy'   => 'nav_menu',
@@ -584,16 +640,21 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                                 }
                                                 ?>
                                                 <span class="description"><?php esc_html_e( 'Choose the menu(s) you want to add the "search menu" at the end.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr class="heading">
-                                            <th colspan="2">
-                                                <?php esc_html_e( 'Search', 'wpc-ajax-search' ); ?>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Post types', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="wpcas-card">
+                                        <div class="wpcas-card-header">
+                                            <div>
+                                                <h2 class="wpcas-card-title"><?php esc_html_e( 'Search', 'wpc-ajax-search' ); ?></h2>
+                                                <p class="wpcas-card-desc"><?php esc_html_e( 'Configure searchable post types, search fields, and result limits.', 'wpc-ajax-search' ); ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Post types', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <?php
                                                 $post_types        = get_post_types( [], 'objects' );
                                                 $search_post_types = (array) self::get_setting( 'search_post_types', [ 'product' ] );
@@ -610,74 +671,91 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                                 }
                                                 ?>
                                                 <span class="description"><?php esc_html_e( 'Choose the post type(s) for searching.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Search limit', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Search limit', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <input type="number" min="1" max="500"
                                                        name="wpcas_settings[search_limit]"
                                                        value="<?php echo esc_attr( self::get_setting( 'search_limit', 10 ) ); ?>"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Search by category', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Search by category', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[search_category]">
                                                     <option value="yes" <?php selected( $search_category, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $search_category, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'For products only.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Search by SKU', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Search by SKU', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[search_sku]">
                                                     <option value="yes" <?php selected( $search_sku, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $search_sku, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'For products only.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Search by tag', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Search by tag', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[search_tag]">
                                                     <option value="yes" <?php selected( $search_tag, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $search_tag, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'For products only.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'More results', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'More results', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[more_results]">
                                                     <option value="yes" <?php selected( $more_results, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $more_results, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
                                                 <span class="description"><?php esc_html_e( 'Show "more results" and link it to the search page when having more results than the limitation. For products only.', 'wpc-ajax-search' ); ?></span>
-                                            </td>
-                                        </tr>
-                                        <tr class="heading">
-                                            <th colspan="2">
-                                                <?php esc_html_e( 'Cache', 'wpc-ajax-search' ); ?>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Cache method', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="wpcas-card">
+                                        <div class="wpcas-card-header">
+                                            <div>
+                                                <h2 class="wpcas-card-title"><?php esc_html_e( 'Cache', 'wpc-ajax-search' ); ?></h2>
+                                                <p class="wpcas-card-desc"><?php esc_html_e( 'Configure caching method and expiration to optimize search performance.', 'wpc-ajax-search' ); ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Cache method', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <select name="wpcas_settings[cache_method]">
                                                     <option value="file" <?php selected( $cache_method, 'file' ); ?>><?php esc_html_e( 'File', 'wpc-ajax-search' ); ?></option>
                                                     <option value="database" <?php selected( $cache_method, 'database' ); ?>><?php esc_html_e( 'Database', 'wpc-ajax-search' ); ?></option>
                                                     <option value="no" <?php selected( $cache_method, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-ajax-search' ); ?></option>
                                                 </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Cache time (hrs)', 'wpc-ajax-search' ); ?></th>
-                                            <td>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Cache time (hrs)', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
                                                 <input name="wpcas_settings[cache_time]" type="number" min="0"
                                                        max="8760"
                                                        value="<?php echo esc_attr( self::get_setting( 'cache_time', 24 ) ); ?>"/>
@@ -693,205 +771,285 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                                                     esc_html_e( 'Cleared!', 'wpc-ajax-search' );
                                                 } else { ?>
-                                                    <a class="button" id="clear_cache"
+                                                    <a class="wpcas-clear-cache-btn" id="clear_cache"
                                                        href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-wpcas&act=clear_cache' ) ); ?>"><?php esc_html_e( 'Clear cache', 'wpc-ajax-search' ); ?></a>
                                                 <?php } ?>
-                                            </td>
-                                        </tr>
-                                        <tr class="submit">
-                                            <th colspan="2">
-                                                <div class="wpclever_submit">
-                                                    <?php
-                                                    settings_fields( 'wpcas_settings' );
-                                                    submit_button( '', 'primary', 'submit', false );
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="wpcas-submit-row">
+                                        <?php
+                                        settings_fields( 'wpcas_settings' );
+                                        submit_button( '', 'primary', 'submit', false );
 
-                                                    if ( function_exists( 'wpc_last_saved' ) ) {
-                                                        wpc_last_saved( self::get_settings() );
+                                        if ( function_exists( 'wpc_last_saved' ) ) {
+                                            wpc_last_saved( self::get_settings() );
+                                        }
+                                        ?>
+                                        <button type="button" class="wpcas-import-export-btn wpclever_export"
+                                                style="margin-left: auto;"
+                                                data-key="wpcas_settings"
+                                                data-name="settings">
+                                            <span class="dashicons dashicons-database-export"></span>
+                                            <?php esc_html_e( 'Import / Export', 'wpc-ajax-search' ); ?>
+                                        </button>
+                                    </div>
+
+                                </form>
+                            <?php } elseif ( $active_tab === 'simulator' ) { ?>
+                                <div class="wpcas-card">
+                                    <div class="wpcas-card-header">
+                                        <div>
+                                            <h2 class="wpcas-card-title"><?php esc_html_e( 'Search Simulator', 'wpc-ajax-search' ); ?></h2>
+                                            <p class="wpcas-card-desc"><?php esc_html_e( 'Enter a keyword to test which Smart Search rule is applied and preview the results.', 'wpc-ajax-search' ); ?></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="wpcas-sim-grid" id="wpcas-simulator-form">
+                                        <div class="wpcas-sim-section">
+                                            <h3 class="wpcas-sim-section-title">
+                                                <span class="dashicons dashicons-search"></span>
+                                                <?php esc_html_e( 'Search Query', 'wpc-ajax-search' ); ?>
+                                            </h3>
+                                            <div class="wpcas-sim-row">
+                                                <label for="wpcas-sim-keyword"><?php esc_html_e( 'Keyword', 'wpc-ajax-search' ); ?></label>
+                                                <input type="text" id="wpcas-sim-keyword"
+                                                       placeholder="<?php esc_attr_e( 'Type keyword to search...', 'wpc-ajax-search' ); ?>"/>
+                                            </div>
+                                            <div class="wpcas-sim-row">
+                                                <label for="wpcas-sim-category"><?php esc_html_e( 'Category Context (Optional)', 'wpc-ajax-search' ); ?></label>
+                                                <select id="wpcas-sim-category">
+                                                    <option value="0"><?php esc_html_e( 'All categories', 'wpc-ajax-search' ); ?></option>
+                                                    <?php
+                                                    $categories = get_terms( [
+                                                            'taxonomy'   => 'product_cat',
+                                                            'hide_empty' => false,
+                                                    ] );
+                                                    if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
+                                                        foreach ( $categories as $cat ) {
+                                                            echo '<option value="' . esc_attr( $cat->term_id ) . '">' . esc_html( $cat->name ) . '</option>';
+                                                        }
                                                     }
                                                     ?>
-                                                </div>
-                                                <a style="display: none;" class="wpclever_export"
-                                                   data-key="wpcas_settings"
-                                                   data-name="settings"
-                                                   href="#"><?php esc_html_e( 'import / export', 'wpc-ajax-search' ); ?></a>
-                                            </th>
-                                        </tr>
-                                    </table>
-                                </form>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="wpcas-sim-actions">
+                                        <button type="button" id="wpcas-sim-run" class="button button-primary">
+                                            <span class="dashicons dashicons-controls-play"></span>
+                                            <?php esc_html_e( 'Run Simulation', 'wpc-ajax-search' ); ?>
+                                        </button>
+                                        <button type="button" id="wpcas-sim-reset" class="button">
+                                            <?php esc_html_e( 'Reset', 'wpc-ajax-search' ); ?>
+                                        </button>
+                                        <span id="wpcas-sim-spinner" class="spinner"></span>
+                                    </div>
+
+                                    <div id="wpcas-sim-results" class="wpcas-sim-results wpcas_hide"></div>
+                                </div>
                             <?php } elseif ( $active_tab === 'localization' ) { ?>
                                 <form method="post" action="options.php">
-                                    <table class="form-table">
-                                        <tr class="heading">
-                                            <th scope="row"><?php esc_html_e( 'General', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <?php esc_html_e( 'Leave blank to use the default text and its equivalent translation in multiple languages.', 'wpc-ajax-search' ); ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Menu label', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <input type="text" class="regular-text" name="wpcas_localization[menu]"
+                                    <div class="wpcas-card">
+                                        <div class="wpcas-card-header">
+                                            <div>
+                                                <h2 class="wpcas-card-title"><?php esc_html_e( 'Localization', 'wpc-ajax-search' ); ?></h2>
+                                                <p class="wpcas-card-desc"><?php esc_html_e( 'Leave blank to use the default text and its equivalent translation in multiple languages.', 'wpc-ajax-search' ); ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Menu label', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
+                                                <input type="text" class="large-text" name="wpcas_localization[menu]"
                                                        value="<?php echo esc_attr( self::localization( 'menu' ) ); ?>"
                                                        placeholder="<?php esc_attr_e( 'Search', 'wpc-ajax-search' ); ?>"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Heading', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <input type="text" class="regular-text"
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Heading', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
+                                                <input type="text" class="large-text"
                                                        name="wpcas_localization[heading]"
                                                        value="<?php echo esc_attr( self::localization( 'heading' ) ); ?>"
                                                        placeholder="<?php esc_attr_e( 'Search', 'wpc-ajax-search' ); ?>"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Placeholder', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <input type="text" class="regular-text"
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Placeholder', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
+                                                <input type="text" class="large-text"
                                                        name="wpcas_localization[placeholder]"
                                                        value="<?php echo esc_attr( self::localization( 'placeholder' ) ); ?>"
                                                        placeholder="<?php esc_attr_e( 'Search products…', 'wpc-ajax-search' ); ?>"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'Popular keywords:', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <input type="text" class="regular-text"
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'Popular keywords:', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
+                                                <input type="text" class="large-text"
                                                        name="wpcas_localization[popular_keywords]"
                                                        value="<?php echo esc_attr( self::localization( 'popular_keywords' ) ); ?>"
                                                        placeholder="<?php esc_attr_e( 'Popular keywords:', 'wpc-ajax-search' ); ?>"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'No results', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <input type="text" class="regular-text"
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'No results', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
+                                                <input type="text" class="large-text"
                                                        name="wpcas_localization[no_results]"
                                                        value="<?php echo esc_attr( self::localization( 'no_results' ) ); ?>"
                                                        placeholder="<?php /* translators: keyword */
                                                        esc_attr_e( 'No results found for "%s".', 'wpc-ajax-search' ); ?>"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'No results in category', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <input type="text" class="regular-text"
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'No results in category', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
+                                                <input type="text" class="large-text"
                                                        name="wpcas_localization[no_results_category]"
                                                        value="<?php echo esc_attr( self::localization( 'no_results_category' ) ); ?>"
                                                        placeholder="<?php /* translators: keyword and category */
                                                        esc_attr_e( 'No results found for "%1$s" in "%2$s".', 'wpc-ajax-search' ); ?>"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><?php esc_html_e( 'More results', 'wpc-ajax-search' ); ?></th>
-                                            <td>
-                                                <input type="text" class="regular-text"
+                                            </div>
+                                        </div>
+                                        <div class="wpcas-settings-row">
+                                            <div class="wpcas-settings-label">
+                                                <strong><?php esc_html_e( 'More results', 'wpc-ajax-search' ); ?></strong>
+                                            </div>
+                                            <div class="wpcas-settings-field">
+                                                <input type="text" class="large-text"
                                                        name="wpcas_localization[more_results]"
                                                        value="<?php echo esc_attr( self::localization( 'more_results' ) ); ?>"
                                                        placeholder="<?php /* translators: count */
                                                        esc_attr_e( 'More results (%d)', 'wpc-ajax-search' ); ?>"/>
-                                            </td>
-                                        </tr>
-                                        <tr class="submit">
-                                            <th colspan="2">
-                                                <?php settings_fields( 'wpcas_localization' ); ?><?php submit_button(); ?>
-                                                <a style="display: none;" class="wpclever_export"
-                                                   data-key="wpcas_localization"
-                                                   data-name="settings"
-                                                   href="#"><?php esc_html_e( 'import / export', 'wpc-ajax-search' ); ?></a>
-                                            </th>
-                                        </tr>
-                                    </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="wpcas-submit-row">
+                                        <?php
+                                        settings_fields( 'wpcas_localization' );
+                                        submit_button( '', 'primary', 'submit', false );
+
+                                        if ( function_exists( 'wpc_last_saved' ) ) {
+                                            wpc_last_saved( self::$localization );
+                                        }
+                                        ?>
+                                        <button type="button" class="wpcas-import-export-btn wpclever_export"
+                                                style="margin-left: auto;"
+                                                data-key="wpcas_localization"
+                                                data-name="settings">
+                                            <span class="dashicons dashicons-database-export"></span>
+                                            <?php esc_html_e( 'Import / Export', 'wpc-ajax-search' ); ?>
+                                        </button>
+                                    </div>
+
                                 </form>
                             <?php } else if ( $active_tab === 'smart' ) { ?>
                                 <form method="post" action="options.php">
-                                    <table class="form-table">
-                                        <tr>
-                                            <td>
-                                                <p style="color: #c9356e">This feature is only available on the Premium
-                                                    Version. Click
-                                                    <a href="https://wpclever.net/downloads/wpc-ajax-search?utm_source=pro&utm_medium=wpcas&utm_campaign=wporg"
-                                                       target="_blank">here</a> to buy, just $29.
-                                                </p>
-                                                <p>
-                                                    <?php esc_html_e( 'This plugin will check the conditions from the top down the list to find if the input keyword matches any condition. When one condition is satisfied, the smart search’ checking process will stop and show the defined products as search results. The checking process won’t stop until a satisfied condition is found in the list. If no conditions are met by the input keyword(s), normal search results will be shown instead.', 'wpc-ajax-search' ); ?>
-                                                </p>
-                                                <div class="wpcas-dialog" id="wpcas_shortcodes_dialog"
-                                                     style="display: none"
-                                                     title="<?php esc_html_e( 'Build-in Shortcodes', 'wpc-ajax-search' ); ?>">
-                                                    You can use shortcode(s) within the text, e.g:
-                                                    <code>ABC [your_shortcode] XYZ</code>
-                                                    <br/><br/>Try below build-in shortcodes:
-                                                    <ul>
-                                                        <li>
-                                                            <code>[wpcas_categories]</code><br/>Display product
-                                                            categories list.
-                                                        </li>
-                                                        <li>
-                                                            <code>[wpcas_products]</code><br/>Display products list,
-                                                            e.g:
-                                                            <code>[wpcas_products type="search" s="hat"
-                                                                limit="10"]</code>
-                                                        </li>
-                                                        <li><code>[wpcas_posts]</code><br/>Display posts list, e.g:
-                                                            <code>[wpcas_posts type="recent" limit="5"]</code></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="wpcas_rules">
-                                                    <?php
-                                                    if ( is_array( self::$rules ) && ( count( self::$rules ) > 0 ) ) {
-                                                        foreach ( self::$rules as $rule_key => $rule ) {
-                                                            self::rule( $rule_key, $rule, false );
-                                                        }
-                                                    } else {
-                                                        self::rule( '', [], true );
-                                                    }
-                                                    ?>
-                                                </div>
-                                                <div class="wpcas_add_rule">
-                                                    <div>
-                                                        <a href="#" class="wpcas_new_rule button">
-                                                            <?php esc_html_e( '+ Add rule', 'wpc-ajax-search' ); ?>
-                                                        </a> <a href="#" class="wpcas_expand_all">
-                                                            <?php esc_html_e( 'Expand All', 'wpc-ajax-search' ); ?>
-                                                        </a> <a href="#" class="wpcas_collapse_all">
-                                                            <?php esc_html_e( 'Collapse All', 'wpc-ajax-search' ); ?>
-                                                        </a>
+                                    <div class="wpcas-card">
+                                        <div class="wpcas-card-header">
+                                            <div>
+                                                <h2 class="wpcas-card-title"><?php esc_html_e( 'Rules', 'wpc-ajax-search' ); ?></h2>
+                                                <div class="wpcas-card-desc">
+                                                    <p style="color: #c9356e">This feature is only available on the
+                                                        Premium
+                                                        Version. Click
+                                                        <a href="https://wpclever.net/downloads/wpc-ajax-search/?utm_source=pro&utm_medium=wpcas&utm_campaign=wporg"
+                                                           target="_blank">here</a> to buy, just $29.
+                                                    </p>
+                                                    <p>
+                                                        <?php esc_html_e( 'This plugin will check the conditions from the top down the list to find if the input keyword matches any condition. When one condition is satisfied, the smart search’ checking process will stop and show the defined products as search results. The checking process won’t stop until a satisfied condition is found in the list. If no conditions are met by the input keyword(s), normal search results will be shown instead.', 'wpc-ajax-search' ); ?>
+                                                    </p>
+                                                    <div class="wpcas-dialog" id="wpcas_shortcodes_dialog"
+                                                         style="display: none"
+                                                         title="<?php esc_html_e( 'Build-in Shortcodes', 'wpc-ajax-search' ); ?>">
+                                                        You can use shortcode(s) within the text, e.g:
+                                                        <code>ABC [your_shortcode] XYZ</code>
+                                                        <br/><br/>Try below build-in shortcodes:
+                                                        <ul>
+                                                            <li>
+                                                                <code>[wpcas_categories]</code><br/>Display product
+                                                                categories list.
+                                                            </li>
+                                                            <li>
+                                                                <code>[wpcas_products]</code><br/>Display products list,
+                                                                e.g:
+                                                                <code>[wpcas_products type="search" s="hat"
+                                                                    limit="10"]</code>
+                                                            </li>
+                                                            <li><code>[wpcas_posts]</code><br/>Display posts list, e.g:
+                                                                <code>[wpcas_posts type="recent" limit="5"]</code></li>
+                                                        </ul>
                                                     </div>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                        <tr class="submit">
-                                            <th colspan="2">
-                                                <div class="wpclever_submit">
-                                                    <?php
-                                                    echo '<input type="hidden" name="wpcas_rules_settings[version]" value="' . esc_attr( WPCAS_VERSION ) . '"/>';
-                                                    settings_fields( 'wpcas_rules' );
-                                                    submit_button( '', 'primary', 'submit', false );
+                                            </div>
+                                            <div class="wpcas-card-header-actions">
+                                                <a href="#" class="wpcas-action-tool-btn wpcas_expand_all">
+                                                    <span class="dashicons dashicons-arrow-down-alt2"></span> <?php esc_html_e( 'Expand All', 'wpc-ajax-search' ); ?>
+                                                </a>
+                                                <a href="#" class="wpcas-action-tool-btn wpcas_collapse_all">
+                                                    <span class="dashicons dashicons-arrow-up-alt2"></span> <?php esc_html_e( 'Collapse All', 'wpc-ajax-search' ); ?>
+                                                </a>
+                                                <button type="button" class="wpcas-import-export-btn wpclever_export"
+                                                        data-key="wpcas_rules"
+                                                        data-name="rules">
+                                                    <span class="dashicons dashicons-database-export"></span>
+                                                    <?php esc_html_e( 'Import / Export', 'wpc-ajax-search' ); ?>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="wpcas_rules">
 
-                                                    if ( function_exists( 'wpc_last_saved' ) ) {
-                                                        wpc_last_saved( get_option( 'wpcas_rules_settings', [] ) );
-                                                    }
-                                                    ?>
-                                                </div>
-                                                <a style="display: none;" class="wpclever_export"
-                                                   data-key="wpcas_rules"
-                                                   data-name="rules"
-                                                   href="#"><?php esc_html_e( 'import / export', 'wpc-ajax-search' ); ?></a>
-                                            </th>
-                                        </tr>
-                                    </table>
+                                            <?php
+                                            if ( is_array( self::$rules ) && ( count( self::$rules ) > 0 ) ) {
+                                                foreach ( self::$rules as $rule_key => $rule ) {
+                                                    self::rule( $rule_key, $rule, false );
+                                                }
+                                            } else {
+                                                self::rule( '', [], true );
+                                            }
+                                            ?>
+
+                                        </div>
+                                        <div class="wpcas_add_rule">
+                                            <div class="wpcas_new_rule">
+                                                <span>+</span> <?php esc_html_e( 'Add rule', 'wpc-ajax-search' ); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="wpcas-submit-row">
+                                        <?php
+                                        echo '<input type="hidden" name="wpcas_rules_settings[version]" value="' . esc_attr( WPCAS_VERSION ) . '"/>';
+                                        settings_fields( 'wpcas_rules' );
+                                        submit_button( '', 'primary', 'submit', false );
+
+                                        if ( function_exists( 'wpc_last_saved' ) ) {
+                                            wpc_last_saved( get_option( 'wpcas_rules_settings', [] ) );
+                                        }
+                                        ?>
+
+                                    </div>
+
                                 </form>
                             <?php } else if ( $active_tab === 'premium' ) {
                                 ?>
-                                <div class="wpclever_settings_page_content_text">
+                                <div class="wpcas-card">
                                     <p>Get the Premium Version just $29!
-                                        <a href="https://wpclever.net/downloads/wpc-ajax-search?utm_source=pro&utm_medium=wpcas&utm_campaign=wporg"
-                                           target="_blank">https://wpclever.net/downloads/wpc-ajax-search</a>
+                                        <a href="https://wpclever.net/downloads/wpc-ajax-search/?utm_source=pro&utm_medium=wpcas&utm_campaign=wporg"
+                                           target="_blank">https://wpclever.net/downloads/wpc-ajax-search/</a>
                                     </p>
                                     <p><strong>Extra features for Premium Version:</strong></p>
                                     <ul style="margin-bottom: 0">
@@ -901,27 +1059,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                 </div>
                                 <?php
                             } ?>
-                        </div><!-- /.wpclever_settings_page_content -->
-                        <div class="wpclever_settings_page_suggestion">
-                            <div class="wpclever_settings_page_suggestion_label">
-                                <span class="dashicons dashicons-yes-alt"></span> Suggestion
-                            </div>
-                            <div class="wpclever_settings_page_suggestion_content">
-                                <div>
-                                    To display custom engaging real-time messages on any wished positions, please
-                                    install
-                                    <a href="https://wordpress.org/plugins/wpc-smart-messages/" target="_blank">WPC
-                                        Smart Messages</a> plugin. It's free!
-                                </div>
-                                <div>
-                                    Wanna save your precious time working on variations? Try our brand-new free plugin
-                                    <a href="https://wordpress.org/plugins/wpc-variation-bulk-editor/" target="_blank">WPC
-                                        Variation Bulk Editor</a> and
-                                    <a href="https://wordpress.org/plugins/wpc-variation-duplicator/" target="_blank">WPC
-                                        Variation Duplicator</a>.
-                                </div>
-                            </div>
-                        </div>
+                        </div><!-- /.wpcas-tab-content -->
                     </div>
                     <?php
                 }
@@ -1297,19 +1435,19 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                                     <?php
                                     echo '<span class="wpcas-search-input-icon"></span>';
                                     echo wp_kses( apply_filters( 'wpcas_search_input', '<input name="wpcas-search-input-value" id="wpcas_search_keyword" type="search" placeholder="' . esc_attr( self::localization( 'placeholder', esc_html__( 'Search products…', 'wpc-ajax-search' ) ) ) . '"/>' ), [
-                                        'input' => [
-                                            'name'        => [],
-                                            'id'          => [],
-                                            'type'        => [],
-                                            'value'       => [],
-                                            'placeholder' => [],
-                                            'class'       => [],
-                                            'style'       => [],
-                                            'disabled'    => [],
-                                            'readonly'    => [],
-                                            'autocomplete' => [],
-                                            'data-*'      => [],
-                                        ],
+                                            'input' => [
+                                                    'name'         => [],
+                                                    'id'           => [],
+                                                    'type'         => [],
+                                                    'value'        => [],
+                                                    'placeholder'  => [],
+                                                    'class'        => [],
+                                                    'style'        => [],
+                                                    'disabled'     => [],
+                                                    'readonly'     => [],
+                                                    'autocomplete' => [],
+                                                    'data-*'       => [],
+                                            ],
                                     ] );
 
                                     if ( ( self::get_setting( 'search_category', 'yes' ) === 'yes' ) && ( $post_types === [ 'product' ] ) ) {
@@ -1414,11 +1552,48 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                 function item_add_to_cart( $product ) {
                     if ( is_a( $product, 'WC_Product' ) ) {
                         echo wp_kses( apply_filters( 'wpcas_item_add_to_cart', '<div class="atc-btn">' . do_shortcode( '[add_to_cart style="" show_price="false" id="' . esc_attr( $product->get_id() ) . '"]' ) . '</div>', $product ), array_merge( wp_kses_allowed_html( 'post' ), [
-                            'form'   => [ 'class' => [], 'id' => [], 'action' => [], 'method' => [], 'enctype' => [], 'data-*' => [] ],
-                            'input'  => [ 'type' => [], 'name' => [], 'value' => [], 'class' => [], 'id' => [], 'style' => [], 'data-*' => [], 'hidden' => [], 'readonly' => [], 'disabled' => [] ],
-                            'button' => [ 'type' => [], 'name' => [], 'value' => [], 'class' => [], 'id' => [], 'style' => [], 'data-*' => [], 'disabled' => [], 'aria-label' => [], 'aria-describedby' => [] ],
-                            'select' => [ 'name' => [], 'id' => [], 'class' => [], 'style' => [], 'data-*' => [], 'disabled' => [], 'multiple' => [] ],
-                            'option' => [ 'value' => [], 'selected' => [], 'disabled' => [] ],
+                                'form'   => [
+                                        'class'   => [],
+                                        'id'      => [],
+                                        'action'  => [],
+                                        'method'  => [],
+                                        'enctype' => [],
+                                        'data-*'  => []
+                                ],
+                                'input'  => [
+                                        'type'     => [],
+                                        'name'     => [],
+                                        'value'    => [],
+                                        'class'    => [],
+                                        'id'       => [],
+                                        'style'    => [],
+                                        'data-*'   => [],
+                                        'hidden'   => [],
+                                        'readonly' => [],
+                                        'disabled' => []
+                                ],
+                                'button' => [
+                                        'type'             => [],
+                                        'name'             => [],
+                                        'value'            => [],
+                                        'class'            => [],
+                                        'id'               => [],
+                                        'style'            => [],
+                                        'data-*'           => [],
+                                        'disabled'         => [],
+                                        'aria-label'       => [],
+                                        'aria-describedby' => []
+                                ],
+                                'select' => [
+                                        'name'     => [],
+                                        'id'       => [],
+                                        'class'    => [],
+                                        'style'    => [],
+                                        'data-*'   => [],
+                                        'disabled' => [],
+                                        'multiple' => []
+                                ],
+                                'option' => [ 'value' => [], 'selected' => [], 'disabled' => [] ],
                         ] ) );
                     }
                 }
@@ -1433,12 +1608,32 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                     <div class="wpcas_rule <?php echo esc_attr( $active ? 'active' : '' ); ?>"
                          data-key="<?php echo esc_attr( $rule_key ); ?>">
                         <div class="wpcas_rule_heading">
-                            <span class="wpcas_rule_move"></span>
+                            <span class="wpcas_rule_move hint--top"
+                                  aria-label="<?php esc_attr_e( 'Drag to reorder', 'wpc-ajax-search' ); ?>"><span
+                                        class="dashicons dashicons-menu"></span></span>
                             <span class="wpcas_rule_label"><span
-                                        class="wpcas_rule_name"><?php echo esc_html( $name ); ?></span> <span
+                                        class="wpcas_rule_name"><?php echo esc_html( $name !== "" ? $name : "#" . $rule_key ); ?></span> <span
                                         class="wpcas_rule_returned"></span></span>
-                            <a href="#"
-                               class="wpcas_rule_remove"><?php esc_html_e( 'remove', 'wpc-ajax-search' ); ?></a>
+                            <span class="wpcas_rule_summary wpcas_summary_btn hint--top"
+                                  aria-label="<?php esc_attr_e( 'Summary', 'wpc-ajax-search' ); ?>">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                            </span>
+                            <span class="wpcas_rule_remove hint--top"
+                                  aria-label="<?php esc_attr_e( 'Remove', 'wpc-ajax-search' ); ?>">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round"><path d="M3 6h18"></path><path
+                                            d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path
+                                            d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                            </span>
                         </div>
                         <div class="wpcas_rule_content">
                             <div class="wpcas_tr">
@@ -1514,7 +1709,8 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 								<option value="exclude" <?php selected( $condition['compare'], 'exclude' ); ?> data-val="text"><?php esc_html_e( 'Exclude keyword(s)', 'wpc-ajax-search' ); ?></option>
 								<option value="regex" <?php selected( $condition['compare'], 'regex' ); ?> data-val="regex"><?php esc_html_e( 'Match regular expression (RegEx)', 'wpc-ajax-search' ); ?></option>
 							</select>
-						</span> <span class="wpcas_condition_number">
+						</span>
+                        <span class="wpcas_condition_value"><span class="wpcas_condition_number">
 							<input type="number" step="1"
                                    name="wpcas_rules[<?php echo esc_attr( $rule_key ); ?>][conditions][<?php echo esc_attr( $condition_key ); ?>][number]"
                                    value="<?php echo esc_attr( $condition['number'] ); ?>"/>
@@ -1533,6 +1729,7 @@ if ( ! function_exists( 'wpcas_init' ) ) {
                         <span class="wpcas_condition_regex"><input type="text" class="text"
                                                                    name="wpcas_rules[<?php echo esc_attr( $rule_key ); ?>][conditions][<?php echo esc_attr( $condition_key ); ?>][pattern]"
                                                                    value="<?php echo esc_attr( $condition['pattern'] ); ?>"/></span>
+                        </span>
                         <span class="wpcas_condition_remove">&times;</span>
                     </div>
                     <?php
@@ -1784,6 +1981,81 @@ if ( ! function_exists( 'wpcas_init' ) ) {
 
                     self::combined( '', [], $rule_key );
                     wp_die();
+                }
+
+                function ajax_simulate() {
+                    check_ajax_referer( 'wpcas_nonce', 'nonce' );
+
+                    if ( ! current_user_can( 'manage_options' ) ) {
+                        wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized permission.', 'wpc-ajax-search' ) ] );
+                    }
+
+                    $raw_keyword = sanitize_text_field( wp_unslash( $_POST['keyword'] ?? '' ) );
+                    $keyword     = sanitize_text_field( apply_filters( 'wpcas_keyword', $raw_keyword ) );
+                    $category    = absint( sanitize_text_field( wp_unslash( $_POST['category'] ?? '0' ) ) );
+
+                    if ( empty( $keyword ) ) {
+                        wp_send_json_error( [ 'message' => esc_html__( 'Please enter a keyword.', 'wpc-ajax-search' ) ] );
+                    }
+
+                    ob_start();
+                    $products = [];
+
+                    $limit      = absint( self::get_setting( 'search_limit', 10 ) );
+                    $post_types = (array) self::get_setting( 'search_post_types', [ 'product' ] );
+
+                    $args = [
+                            'is_wpcas'       => true,
+                            'post_type'      => $post_types,
+                            'post_status'    => 'publish',
+                            'fields'         => 'ids',
+                            'posts_per_page' => $limit,
+                            's'              => $keyword
+                    ];
+
+                    if ( ( $post_types === [ 'product' ] ) && $category ) {
+                        $args['tax_query'] = [
+                                [
+                                        'taxonomy'         => 'product_cat',
+                                        'terms'            => $category,
+                                        'field'            => 'ID',
+                                        'include_children' => true,
+                                        'operator'         => 'IN'
+                                ]
+                        ];
+                    }
+
+                    $on_sale  = self::get_setting( 'keyword_on_sale', '' );
+                    $recent   = self::get_setting( 'keyword_recent', '' );
+                    $featured = self::get_setting( 'keyword_featured', '' );
+                    $popular  = self::get_setting( 'keyword_popular', '' );
+
+                    if ( ! empty( $on_sale ) && $keyword === $on_sale ) {
+                        $args['post__in'] = wc_get_product_ids_on_sale();
+                    } elseif ( ! empty( $recent ) && $keyword === $recent ) {
+                        $args['orderby'] = 'date';
+                    } elseif ( ! empty( $featured ) && $keyword === $featured ) {
+                        $args['post__in'] = wc_get_featured_product_ids();
+                    } elseif ( ! empty( $popular ) && $keyword === $popular ) {
+                        $args['meta_key'] = 'total_sales';
+                        $args['orderby']  = 'meta_value_num';
+                    }
+
+                    $query    = new WP_Query( apply_filters( 'wpcas_search_query_args', $args ) );
+                    $products = $query->posts;
+
+                    if ( $products ) {
+                        self::show_products( $products, $keyword, $category, 0 );
+                    } else {
+                        echo wp_kses_post( '<div class="wpcas-not-found" style="padding: 15px;"><span>' . esc_html__( 'No results found.', 'wpc-ajax-search' ) . '</span></div>' );
+                    }
+
+                    $results_html = ob_get_clean();
+
+                    wp_send_json_success( [
+                            'rule'    => null, // Free version doesn't have rules
+                            'results' => $results_html
+                    ] );
                 }
 
                 function ajax_search_term() {

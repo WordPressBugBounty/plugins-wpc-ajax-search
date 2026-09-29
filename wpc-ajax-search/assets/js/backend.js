@@ -39,13 +39,15 @@
     wpcas_terms_init();
   });
 
-  $(document).on('change, keyup', '.wpcas_rule_name_val', function() {
+  $(document).on('change keyup', '.wpcas_rule_name_val', function() {
     var name = $(this).val();
+    var key = $(this).closest('.wpcas_rule').data('key');
+    var displayName = name.trim() !== '' ? name.replace(/(<([^>]+)>)/ig, '') : '#' + key;
 
     $(this).
         closest('.wpcas_rule').
         find('.wpcas_rule_name').
-        html(name.replace(/(<([^>]+)>)/ig, ''));
+        html(displayName);
   });
 
   $(document).on('change', '.wpcas_terms', function() {
@@ -72,7 +74,7 @@
   });
 
   $(document).on('click touch', '.wpcas_rule_heading', function(e) {
-    if ($(e.target).closest('.wpcas_rule_remove').length === 0) {
+    if ($(e.target).closest('.wpcas_rule_remove').length === 0 && $(e.target).closest('.wpcas_rule_summary').length === 0) {
       $(this).closest('.wpcas_rule').toggleClass('active');
     }
   });
@@ -454,4 +456,229 @@
       quicktags: true,
     });
   }
+
+  // Rule Summary Modal
+  $(document).on('click touch', '.wpcas_rule_summary', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var $item = $(this).closest('.wpcas_rule');
+      var key = $item.data('key') || '';
+      var ruleName = $item.find('.wpcas_rule_name').text() || ('#' + key);
+
+      // Check conditions
+      var conditions = [];
+      $item.find('.wpcas_condition').each(function () {
+          var $c = $(this);
+          var compare = $c.find('.wpcas_condition_compare_selector option:selected').text().trim();
+          var valType = $c.find('.wpcas_condition_compare_selector option:selected').data('val');
+          var detail = '';
+
+          if (valType === 'number') {
+              detail = $c.find('.wpcas_condition_number input').val();
+          } else if (valType === 'text') {
+              var terms = [];
+              $c.find('.wpcas_condition_text_val option:selected').each(function () {
+                  terms.push($(this).text().trim());
+              });
+              if (terms.length) {
+                  detail = terms.join(', ');
+              }
+          } else if (valType === 'regex') {
+              detail = $c.find('.wpcas_condition_regex input').val();
+          }
+
+          if (compare) {
+              conditions.push('<span class="wpcas-sum-type">' + compare + '</span>' + (detail ? ': <span class="wpcas-sum-value">' + detail + '</span>' : ''));
+          }
+      });
+
+      // Returned results
+      var returned = $item.find('.wpcas_returned_selector option:selected').text().trim();
+      var returnedDetail = '';
+      var returnedVal = $item.find('.wpcas_returned_selector').val();
+      
+      if (returnedVal === 'products') {
+          var getVal = $item.find('.wpcas_source_selector').val();
+          var getText = $item.find('.wpcas_source_selector option:selected').text().trim();
+          returnedDetail = '<strong>Source:</strong> ' + getText;
+          if (getVal === 'products') {
+              var terms = [];
+              $item.find('.wpcas-product-search option:selected').each(function() {
+                  terms.push($(this).text().trim());
+              });
+              if (terms.length) {
+                  returnedDetail += '<br/>(Products: ' + terms.join(', ') + ')';
+              }
+          } else if (getVal === 'combined') {
+              var terms = [];
+              $item.find('.wpcas_combined').each(function() {
+                  var cSelectVal = $(this).find('.wpcas_combined_selector').val();
+                  var cSelectText = $(this).find('.wpcas_combined_selector option:selected').text().trim();
+                  
+                  if (cSelectVal === 'price') {
+                      var cmp = $(this).find('.wpcas_combined_number_compare option:selected').text().trim();
+                      var num = $(this).find('.wpcas_combined_number_val').val();
+                      terms.push('<strong>' + cSelectText + '</strong> ' + cmp + ' ' + num);
+                  } else {
+                      var cmp = $(this).find('.wpcas_combined_compare option:selected').text().trim();
+                      var termArr = [];
+                      $(this).find('.wpcas_combined_val option:selected').each(function() {
+                          termArr.push($(this).text().trim());
+                      });
+                      if (termArr.length) {
+                          terms.push('<strong>' + cSelectText + '</strong> ' + cmp + ' ' + termArr.join(', '));
+                      }
+                  }
+              });
+              if (terms.length) {
+                  returnedDetail += '<br/><div style="margin-top: 4px; padding-left: 10px; border-left: 2px solid #e2e8f0;">' + terms.join('<br/>') + '</div>';
+              }
+          } else if (getVal !== 'all') {
+              var terms = [];
+              $item.find('.wpcas_terms option:selected').each(function() {
+                  terms.push($(this).text().trim());
+              });
+              if (terms.length) {
+                  returnedDetail += '<br/>(Terms: ' + terms.join(', ') + ')';
+              }
+          }
+      } else if (returnedVal === 'message') {
+          returnedDetail = '<strong>Custom message</strong>';
+      }
+
+      // Build HTML
+      var html = '<div class="wpcas-sum-section">';
+      html += '<div class="wpcas-sum-status active"><span class="wpcas-sum-dot"></span> Active</div>';
+      if (key) {
+          html += '<div class="wpcas-sum-badge">#' + key + '</div>';
+      }
+      html += '</div>';
+
+      html += '<div class="wpcas-sum-section">';
+      html += '<div class="wpcas-sum-label">Conditions</div>';
+      if (conditions.length > 0) {
+          html += '<div class="wpcas-sum-conditions">';
+          for (var j = 0; j < conditions.length; j++) {
+              var cPrefix = j > 0 ? '<span class="wpcas-sum-relation">AND</span> ' : '';
+              html += '<div class="wpcas-sum-condition-item">' + cPrefix + conditions[j] + '</div>';
+          }
+          html += '</div>';
+      } else {
+          html += '<div class="wpcas-sum-detail">Include either keyword</div>';
+      }
+      html += '</div>';
+
+      html += '<div class="wpcas-sum-section">';
+      html += '<div class="wpcas-sum-label">Returned Results</div>';
+      html += '<div class="wpcas-sum-detail">';
+      html += '<strong class="wpcas-sum-type">' + returned + '</strong>';
+      if (returnedDetail) {
+          html += '<div style="margin-top: 6px;">' + returnedDetail + '</div>';
+      }
+      html += '</div></div>';
+
+      if ($('#wpcas-summary-modal').length === 0) {
+          $('body').append('<div id="wpcas-summary-modal"><div class="wpcas-summary-content"></div></div>');
+      }
+
+      $('#wpcas-summary-modal').attr('title', ruleName).find('.wpcas-summary-content').html(html);
+      $('#wpcas-summary-modal').dialog({
+          modal: true,
+          width: 520,
+          dialogClass: 'wpc-dialog wpcas-dialog wpcas-summary-dialog',
+          open: function () {
+              $(this).dialog('widget').siblings('.ui-widget-overlay').addClass('wpcas-overlay');
+              $(document).on('click.wpcas-summary', '.wpcas-overlay', function () {
+                  $('#wpcas-summary-modal').dialog('close');
+              });
+          },
+          close: function () {
+              $(document).off('click.wpcas-summary');
+              $('.wpcas-overlay').removeClass('wpcas-overlay');
+          },
+          buttons: {
+              'Close': function () {
+                  $(this).dialog('close');
+              }
+          }
+      });
+  });
+// ──── Simulator ────────────────────────────────────
+    
+    $(document).on('click', '#wpcas-sim-run', function (e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var $spinner = $('#wpcas-sim-spinner');
+        var $results = $('#wpcas-sim-results');
+        var keyword = $('#wpcas-sim-keyword').val();
+        var category = $('#wpcas-sim-category').val();
+
+        if (!keyword) {
+            alert('Please enter a keyword to simulate.');
+            $('#wpcas-sim-keyword').focus();
+            return;
+        }
+
+        $btn.prop('disabled', true);
+        $spinner.addClass('is-active');
+        $results.removeClass('wpcas_hide').html(
+            '<div class="wpcas-sim-loading" style="padding: 15px; color: #64748b;"><span class="spinner is-active" style="float:none; margin:0 5px 0 0;"></span> Simulating search results...</div>'
+        );
+
+        $.post(ajaxurl, {
+            action: 'wpcas_simulate',
+            nonce: wpcas_vars.wpcas_nonce,
+            keyword: keyword,
+            category: category
+        }, function (response) {
+            $btn.prop('disabled', false);
+            $spinner.removeClass('is-active');
+
+            if (!response.success) {
+                var errMsg = response.data && response.data.message ? response.data.message : 'Simulation failed.';
+                $results.html('<div class="wpcas-sim-empty-state" style="padding: 15px; color: #ef4444;"><span class="dashicons dashicons-warning"></span> ' + errMsg + '</div>');
+                return;
+            }
+
+            var data = response.data;
+            var html = '';
+
+            // 1. Show Matched Rule if any
+            if (data.rule) {
+                html += '<div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; color: #166534; display: flex; align-items: center; gap: 8px;">';
+                html += '  <span class="dashicons dashicons-yes-alt" style="color: #22c55e;"></span>';
+                html += '  <strong>Smart Search Rule Matched:</strong> ' + data.rule.name;
+                if (data.rule.type === 'message') {
+                    html += ' <span style="background: #dcfce7; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-left: auto;">Returns Message</span>';
+                } else {
+                    html += ' <span style="background: #dcfce7; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-left: auto;">Returns Products</span>';
+                }
+                html += '</div>';
+            } else {
+                html += '<div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; color: #64748b; display: flex; align-items: center; gap: 8px;">';
+                html += '  <span class="dashicons dashicons-info"></span>';
+                html += '  <strong>No rules matched.</strong> Fallback to standard product search.';
+                html += '</div>';
+            }
+
+            // 2. Show Results HTML
+            html += '<div class="wpcas-simulator-results-wrap" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden;">';
+            html += '  <div style="background: #f1f5f9; padding: 10px 15px; font-weight: 500; border-bottom: 1px solid #e2e8f0;">Search Output Preview</div>';
+            html += '  <div class="wpcas-result-items" style="position: relative; width: 100%;">' + data.results + '</div>';
+            html += '</div>';
+
+            $results.html(html);
+        });
+    });
+
+    $(document).on('click', '#wpcas-sim-reset', function (e) {
+        e.preventDefault();
+        $('#wpcas-sim-keyword').val('');
+        $('#wpcas-sim-category').val('0');
+        $('#wpcas-sim-results').addClass('wpcas_hide').empty();
+    });
+
 })(jQuery);
+
+    
