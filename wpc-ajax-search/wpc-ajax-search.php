@@ -8,17 +8,17 @@ Author URI: https://wpclever.net
 Text Domain: wpc-ajax-search
 Domain Path: /languages/
 Requires Plugins: woocommerce
-Version: 2.6.0
+Version: 2.6.1
 Requires at least: 5.9
 WC requires at least: 3.0
-WC tested up to: 11.1
+WC tested up to: 11.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.6.0' );
+! defined( 'WPCAS_VERSION' ) && define( 'WPCAS_VERSION', '2.6.1' );
 ! defined( 'WPCAS_LITE' ) && define( 'WPCAS_LITE', __FILE__ );
 ! defined( 'WPCAS_FILE' ) && define( 'WPCAS_FILE', __FILE__ );
 ! defined( 'WPCAS_URI' ) && define( 'WPCAS_URI', plugin_dir_url( __FILE__ ) );
